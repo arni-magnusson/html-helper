@@ -45,13 +45,15 @@
 
 ;;; Code:
 
-;;{{{ user variables
+;; 1  Preamble
 
-;; Set this to be whatever signature you want on the bottom of your pages.
+(require 'tempo)
+(require 'easymenu)
+
+;; 2  User variables
+
 (defvar html-helper-address-string ""
   "*The default author string of each file.")
-
-;; Features; these are all good to have on. (see also tempo.el)
 
 (defvar html-helper-use-expert-menu nil
   "*If not nil, then use the full HTML menu.")
@@ -61,8 +63,6 @@
 
 (defvar html-helper-build-new-buffer t
   "*If not nil, then insert `html-helper-new-buffer-strings' for new buffers.")
-
-;; variables to configure (these defaults are reasonable.)
 
 (defvar html-helper-htmldtd-version "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML//EN\">\n"
   "*Version of HTML DTD you're using.")
@@ -83,8 +83,6 @@ Default is 4, the length of things like \"<li>\" and \"<dd>\".")
 (defvar html-helper-never-indent nil
   "*If not nil, the indentation code for html-helper is turned off.")
 
-;; hooks (see also tempo.el)
-
 (defvar html-helper-mode-hook nil
   "*Hook run when html-helper-mode is started.")
 
@@ -94,8 +92,6 @@ Default is 4, the length of things like \"<li>\" and \"<dd>\".")
 (defvar html-helper-timestamp-hook 'html-helper-default-insert-timestamp
   "*Hook called for timestamp insertion.
 Override this for your own timestamp styles.")
-
-;; strings you might want to change
 
 (defvar html-helper-new-buffer-template
   '(html-helper-htmldtd-version
@@ -127,16 +123,11 @@ Everything between `html-helper-timestamp-start' and
 of the function `html-helper-insert-timestamp' if
 `html-helper-do-write-file-hooks' is t")
 
-;; control over what types of tags to load. By default, we load all the
-;; ones we know of.
-
 (defvar html-helper-types-to-install
   '(anchor list header logical phys textel entity image head form)
   "*List of tag types to install when html-helper-mode is first loaded.
 If you want to not install some type of tag, override this variable.
 Order is significant: menus go in this order.")
-
-;; emacs18 detection.
 
 (defvar html-helper-emacs18
   (and (boundp 'emacs-version)
@@ -144,18 +135,7 @@ Order is significant: menus go in this order.")
            (string-lessp emacs-version "19")))
   "I'll do minimal emacs18 support, grumble.")
 
-;;}}} end of user variables
-
-(require 'tempo)               ; essential part of html-helper-mode
-(condition-case nil            ; menu support, standard in emacs19
-    (require 'auc-menu)        ; add-on for XEmacs. *why* does this
-  (error (require 'easymenu))) ; package have to have two names?
-
-;;{{{ html-helper-mode-syntax-table and html-helper-mode-abbrev-table
-
-;; emacs doesn't seem to be able to really handle SGML like syntax. In
-;; particular, comments are a loss.
-;; We do try this, though: give < and > matching semantics
+;; 3  Syntax table and abbrev table
 
 (defvar html-helper-mode-syntax-table nil
   "Syntax table for html-helper.")
@@ -173,27 +153,26 @@ Order is significant: menus go in this order.")
   "Abbrev table used while in html-helper-mode.")
 (define-abbrev-table 'html-helper-mode-abbrev-table ())
 
-;;}}}
-;;{{{ type based keymap and menu variable and function setup
+;; 4  Keymap and menu
 
-;; Our basic keymap.
 (defvar html-helper-mode-map (make-sparse-keymap)
   "Keymap for html-helper")
+
 (defvar html-helper-mode-menu nil
   "Menu for html-helper. Clobbered and rebuilt by `html-helper-install-menu'")
 
-;; html-helper-mode has a concept of "type" of tags. Each type is a
-;; list of tags that all go together in one keymap and one menu.
-;; Types can be added to the system after html-helper has been loaded,
-;; briefly by doing html-helper-add-type-to-alist, then
-;; html-helper-install-type, then html-helper-add-tag (for each tag)
-;; then html-helper-rebuild-menu. See the mode documentation for more detail.
+;; html-helper-mode has a concept of "type" of tags. Each type is a list of tags
+;; that all go together in one keymap and one menu. Types can be added to the
+;; system after html-helper has been loaded, briefly by doing
+;; html-helper-add-type-to-alist, then html-helper-install-type,
+;; then html-helper-add-tag (for each tag) then html-helper-rebuild-menu. See
+;; the mode documentation for more detail.
+
+;; 5  Accessor functions for html-helper-type-alist
 
 (defconst html-helper-type-alist nil
   "Alist: type of tag -> keymap, keybinding, menu, menu string.
 Add to this with `html-helper-add-type-to-alist'.")
-
-;;{{{ accessor functions for html-helper-type-alist
 
 (defun html-helper-keymap-for (type)
   "Accessor function for alist: for type, return keymap or nil"
@@ -216,15 +195,13 @@ Add to this with `html-helper-add-type-to-alist'.")
   (cons (html-helper-menu-string-for type)
         (eval (html-helper-menu-for type))))
 
-;;}}}
-
 (defun html-helper-add-type-to-alist (type)
   "Add a type specification to the alist.
 The spec goes (type . (keymap-symbol keyprefix menu-symbol menu-string)).
 See code for an example."
   (setq html-helper-type-alist (cons type html-helper-type-alist)))
 
-;; Here are the types provided by html-helper-mode.
+;; Types provided by html-helper-mode
 (mapcar 'html-helper-add-type-to-alist
         '((entity  . (nil nil html-helper-entity-menu "Insert Character Entities"))
           (textel  . (nil nil html-helper-textel-menu "Insert Text Elements"))
@@ -237,8 +214,8 @@ See code for an example."
           (form    . (html-helper-form-map "\C-c\C-f" html-helper-form-menu "Insert Form Elements"))
           (image   . (html-helper-image-map "\C-c\C-i" html-helper-image-menu "Insert Inlined Images"))))
 
-;; Once html-helper-mode is aware of a type, it can then install the
-;; type: arrange for keybindings, menus, etc.
+;; Once html-helper-mode is aware of a type, it can then install the type:
+;; arrange for keybindings, menus, etc.
 
 (defconst html-helper-installed-types nil
   "The types that have been installed (used when building menus).
@@ -266,10 +243,10 @@ with html-helper-add-type-to-alist."
          (progn
            (set menu nil)))))
 
-;; install the default types.
+;; Install the default types
 (mapcar 'html-helper-install-type html-helper-types-to-install)
 
-;; special mode keys
+;; Special mode keys
 (mapcar
  (function (lambda (l) (define-key html-helper-mode-map (car l) (nth 1 l))))
  '(("\M-\C-f" tempo-forward-mark)
@@ -285,27 +262,23 @@ with html-helper-add-type-to-alist."
 (define-key html-helper-mode-functions-map "t"
             'html-helper-insert-timestamp-delimiter-at-point)
 
-;; indentation keys - only rebind these if the user wants indentation
+;; Indentation keys - only rebind these if the user wants indentation
 (if html-helper-never-indent
     ()
   (define-key html-helper-mode-map "\t" 'html-helper-indent-command)
   (define-key html-helper-mode-map "\C-m" 'newline-and-indent))
 
-;; browse url stuff
+;; Browse URL stuff
 (if (fboundp 'browse-url-of-file)
     (define-key html-helper-mode-functions-map "v" 'browse-url-of-file))
 (if (and (boundp 'browse-url-browser-function) (fboundp browse-url-browser-function))
     (define-key html-helper-mode-functions-map "u" browse-url-browser-function))
 
-;;}}}
-
-;;{{{ html-helper-add-tag function for building basic tags
+;; 6  Basic tags
 
 (defvar html-helper-tempo-tags nil
   "List of tags used in completion.")
 
-;; this while loop is awfully Cish
-;; isn't there an emacs lisp function to do this?
 (defun html-helper-string-to-symbol (input-string)
   "Given a string, downcase it and replace spaces with -.
 We use this to turn menu entries into good symbols for functions.
@@ -317,7 +290,6 @@ It's not entirely successful, but fortunately emacs lisp is forgiving."
           (aset s l ?\-))
       (setq l (1- l)))
     (concat "html-" (downcase s))))
-
 
 (defun html-helper-add-tag (l)
   "Add a new tag to html-helper-mode.
@@ -335,7 +307,6 @@ appropriate keymap if a key is requested. Format:
          (command (tempo-define-template (html-helper-string-to-symbol name)
                                          tag completer doc
                                          'html-helper-tempo-tags)))
-
     (if (null (memq type html-helper-installed-types))     ; type loaded?
         t                                                  ; no, do nothing.
       (if (stringp key)                                    ; bind key somewhere?
@@ -348,25 +319,18 @@ appropriate keymap if a key is requested. Format:
                (cons (vector name command t) (eval menu))))
       )))
 
-;; for backwards compatability
+;; Backwards compatability
 (fset 'html-helper-add-cookie 'html-helper-add-tag)
 
-;;}}}
+;; 7  HTML tags
 
-;;{{{ most of the HTML tags
-
-;; These tags are an attempt to be HTML/2.0 compliant, with the exception
-;; of container <p>, <li>, <dd>, <dt> (we adopt 3.0 behaviour).
-;; For reference see <URL:http://www.w3.org/hypertext/WWW/MarkUp/MarkUp.html>
-
-;; order here is significant: within a tag type, menus and mode help
-;; go in the reverse order of what you see here. Sorry about that, it's
-;; not easy to fix.
+;; Order here is significant: within a tag type, menus and mode help go in the
+;; reverse order of what you see here. Sorry about that, it's not easy to fix.
 
 (mapcar
  'html-helper-add-tag
  '(
-   ;;entities
+   ;; Entities
    (entity "\C-c#"  "&#"     "Ascii Code"        ("&#" (r "Ascii: ") ";"))
    (entity "\C-c\"" "&quot;" "Quotation mark"    ("&quot;"))
    (entity "\C-c$"  "&reg;"  "Registered"        ("&reg;"))
@@ -377,7 +341,7 @@ appropriate keymap if a key is requested. Format:
    (entity "\C-c>"  "&gt;"   "Greater Than"      ("&gt;"))
    (entity "\C-c<"  "&lt;"   "Less Than"         ("&lt;"))
 
-   ;; logical styles
+   ;; Logical styles
    (logical "b" "<blockquote>" "Blockquote"     ("<blockquote>" (r "Quote: ") "</blockquote>"))
    (logical "c" "<code>"       "Code"           ("<code>" (r "Code: ") "</code>"))
    (logical "x" "<samp>"       "Sample"         ("<samp>" (r "Sample code") "</samp>"))
@@ -390,14 +354,14 @@ appropriate keymap if a key is requested. Format:
    (logical "s" "<strong>"     "Strong"         ("<strong>" (r "Text: ") "</strong>"))
    (logical "p" "<pre>"        "Preformatted"   ("<pre>" (r "Text: ") "</pre>"))
 
-   ;;physical styles
+   ;; Physical styles
    (phys "s" "<strike>" "Strikethru" ("<strike>" (r "Text: ") "</strike>"))
    (phys "u" "<u>"      "Underline"  ("<u>" (r "Text: ") "</u>"))
    (phys "i" "<i>"      "Italic"     ("<i>" (r "Text: ") "</i>"))
    (phys "b" "<b>"      "Bold"       ("<b>" (r "Text: ") "</b>"))
    (phys "f" "<tt>"     "Fixed"      ("<tt>" (r "Text: ") "</tt>"))
 
-   ;;headers
+   ;; Headers
    (header "6" "<h6>" "Header 6" ("<h6>" (r "Header: ") "</h6>"))
    (header "5" "<h5>" "Header 5" ("<h5>" (r "Header: ") "</h5>"))
    (header "4" "<h4>" "Header 4" ("<h4>" (r "Header: ") "</h4>"))
@@ -405,7 +369,7 @@ appropriate keymap if a key is requested. Format:
    (header "2" "<h2>" "Header 2" ("<h2>" (r "Header: ") "</h2>"))
    (header "1" "<h1>" "Header 1" ("<h1>" (r "Header: ") "</h1>"))
 
-   ;; forms
+   ;; Forms
    (form "o" "<option>"      "Option"            (& "<option>" > ))
    (form "v" "<option value" "Option with Value" (& "<option value=\"" (r "Value: ") "\">" >))
    (form "s" "<select"       "Selections"        ("<select name=\"" (p "Name: ") "\">\n<option>" > "\n</select>")"<select")
@@ -419,7 +383,7 @@ appropriate keymap if a key is requested. Format:
    (form "t" "<input"        "Text Field"        ("<input type=\"TEXT\" name=\"" (p "Name: ") "\" size=\"" (p "Size: ") "\">"))
    (form "f" "<form"         "Form"              ("<form action=\"" (p "Action: ") "\" method=\"" (p "Method: ") "\">\n</form>\n"))
 
-   ;;lists
+   ;; Lists
    (list "t" "<dt>"   "Definition Item" (& "<dt>" > (p "Term: ") "\n<dd>" > (r "Definition: ")))
    (list "l" "<li>"   "List Item"       (& "<li>" > (r "Item: ")))
    (list "r" "<dir>"  "DirectoryList"   (& "<dir>" > "\n<li>" > (r "Item: ") "\n</dir>" >))
@@ -428,22 +392,22 @@ appropriate keymap if a key is requested. Format:
    (list "d" "<dl>"   "Definition List" (& "<dl>" > "\n<dt>" > (p "Term: ") "\n<dd>" > (r "Definition: ") "\n</dl>" >))
    (list "u" "<ul>"   "Unordered List"  (& "<ul>" > "\n<li>" > (r "Item: ") "\n</ul>" >))
 
-   ;;anchors
+   ;; Anchors
    (anchor "n" "<a name=" "Link Target" ("<a name=\"" (p "Anchor name: ") "\">" (r "Anchor text: ") "</a>"))
    (anchor "l" "<a href=" "Hyperlink"   ("<a href=\"" (p "URL: ") "\">" (r "Anchor text: ") "</a>"))
 
-   ;;graphics
+   ;; Graphics
    (image "a" nil           "Aligned Image"                ("<img align=\"" (r "Alignment: ") "\" src=\"" (r "Image URL: ") "\">"))
    (image "i" "<img src="   "Image"                        ("<img src=\"" (r "Image URL: ") "\">"))
    (image "e" "<img align=" "Aligned Image With Alt. Text" ("<img align=\"" (r "Alignment: ") "\" src=\"" (r "Image URL: ") "\" alt=\"" (r "Text URL: ") "\">"))
    (image "t" "<img alt="   "Image With Alternate Text"    ("<img alt=\"" (r "Text URL: ") "\" src=\"" (r "Image URL: ") "\">"))
 
-   ;;text elements
+   ;; Text elements
    (textel "\C-c="    nil "Horizontal Line" (& "<hr>\n"))
    (textel "\C-c\C-m" nil "Line Break"      ("<br>\n"))
    (textel "\e\C-m"   nil "Paragraph"       ("<p>\n"))
 
-   ;;head elements
+   ;; Head elements
    (head "H" "<head>"            "Head"            ("<head>\n" "</head>\n"))
    (head "B" "<body>"            "Body"            ("<body>\n" "</body>\n"))
    (head "i" "<isindex>"         "Isindex"         ("<isindex>\n"))
@@ -455,12 +419,11 @@ appropriate keymap if a key is requested. Format:
    (head "t" "<title>"           "Title"           ("<title>" (r "Document title: ") "</title>"))
    ))
 
-;;}}}
-;;{{{ html-helper-smart-insert-item
+;; 8  Smart insert item
 
-;; there are two different kinds of items in HTML - those in regular
-;; lists <li> and those in dictionaries <dt>..<dd>
-;; This command will insert the appropriate one depending on context.
+;; There are two different kinds of items in HTML - those in regular lists <li>
+;; and those in dictionaries <dt>..<dd>. This command will insert the
+;; appropriate one depending on context.
 
 (defun html-helper-smart-insert-item (&optional arg)
   "Insert a new item, either in a regular list or a dictionary."
@@ -473,21 +436,20 @@ appropriate keymap if a key is requested. Format:
         (tempo-template-html-definition-item arg)
       (tempo-template-html-list-item arg))))
 
-;; special keybindings in the prefix maps (not in the list of tags)
+;; Special keybindings in the prefix maps (not in the list of tags)
 (and (boundp 'html-helper-list-map)
      (define-key html-helper-list-map "i" 'html-helper-smart-insert-item))
 
-;; and, special menu bindings
+;; And, special menu bindings
 (and (boundp 'html-helper-list-menu)
      (setq html-helper-list-menu
            (cons '["List Item" html-helper-smart-insert-item t] html-helper-list-menu)))
 
-;;}}}
-;;{{{ menu support
+;; 9  Menu support
 
-;; menus are built for easymenu. html-helper-add-tag builds
-;; submenus based on tag type, the expert menu code lumps them
-;; together into one list and calls easy-menu-define
+;; Menus are built for easymenu. html-helper-add-tag builds submenus based on
+;; tag type, the expert menu code lumps them together into one list and calls
+;; easy-menu-define.
 
 (defvar html-helper-novice-menu
   '("HTML"
@@ -523,7 +485,7 @@ If `html-helper-use-expert-menu' is nil, then just use a novice menu."
           (> (prefix-numeric-value arg) 0)))
   (html-helper-rebuild-menu))
 
-;; If browse-url loaded, add this in the novice menu.
+;; If browse-url loaded, add this in the novice menu
 (if (fboundp 'browse-url-of-file)
     (setq html-helper-novice-menu
           (append html-helper-novice-menu
@@ -533,7 +495,7 @@ If `html-helper-use-expert-menu' is nil, then just use a novice menu."
 (defun html-helper-expert-menu ()
   "This menu is based on the current value of `html-helper-installed-types'.
 This function can be called again, it redoes the entire menu."
-  ;; first, reset this so we can call this again and again.
+  ;; First, reset this so we can call this again and again
   (setq html-helper-mode-menu nil)
 
   ;; Cons in the toggle of the menu
@@ -556,13 +518,13 @@ This function can be called again, it redoes the entire menu."
             (cons (vector "Browse URL at point" browse-url-browser-function t)
                   html-helper-mode-menu)))
 
-  ;; cons in the timestamp delimiters
+  ;; Cons in the timestamp delimiters
   (setq html-helper-mode-menu
         (cons '["Insert Timestamp Delimiter"
                 html-helper-insert-timestamp-delimiter-at-point t]
               html-helper-mode-menu))
 
-  ;; now cons up the main menu out of the submenus
+  ;; Now cons up the main menu out of the submenus
   (mapcar
    (function (lambda (type)
                (setq html-helper-mode-menu
@@ -570,21 +532,18 @@ This function can be called again, it redoes the entire menu."
                            html-helper-mode-menu))))
    html-helper-installed-types)
 
-  ;; now tack on our name
+  ;; Now tack on our name
   (setq html-helper-mode-menu (cons "HTML" html-helper-mode-menu))
   html-helper-mode-menu)
 
 (html-helper-rebuild-menu)
 
-;;}}}
+;; 10 Context guessing
 
-;;{{{ context guessing
-
-;; guess where we are in indented lists based on the last list token.
-;; it would be much better to try to match </ul> to <ul>, and </ol> to <ol>
-;; etc, but that is pretty unwieldy and slow.
-;; Note, we make select/option look like a list structure too, so indentation
-;; works. This is a bit weird, but it's ok.
+;; Guess where we are in indented lists based on the last list token. It would
+;; be much better to try to match </ul> to <ul>, and </ol> to <ol> etc, but that
+;; is pretty unwieldy and slow. Note, we make select/option look like a list
+;; structure too, so indentation works. This is a bit weird, but it's ok.
 
 (defvar html-helper-any-list-item-start "<li>\\|<dt>\\|<dd>\\|<option\\|<th>\\|<td>")
 (defvar html-helper-any-list-item-end "</li>\\|</dt>\\|</dd>\\|</th>\\|</td>")
@@ -629,8 +588,7 @@ Ignores list item ends, because those aren't reliable for indentation."
   (interactive)
   (message "%s" (html-helper-guess-prev-context)))
 
-;;}}}
-;;{{{ indentation
+;; 11 Indentation
 
 (defvar html-helper-print-indent-info nil
   "If t, indent will print out information as a message.")
@@ -644,7 +602,7 @@ and `html-helper-never-indent'."
   (interactive)
   (html-helper-indent))
 
-;; some ideas borrowed from cc-mode.el.
+;; Some ideas borrowed from cc-mode.el.
 ;; Basic logic:
 ;;   if this line is some sort of list token, indent according to prev context:
 ;;     if previous context was a list-end or item-start, use its indentation
@@ -659,7 +617,6 @@ and `html-helper-never-indent'."
 ;;   else if this line is not a list item, and previous line is a item-start
 ;;     indent continue-indent, because this is part of the item
 
-
 (defun html-helper-indent ()
   "Indentation workhorse function."
   (if html-helper-never-indent
@@ -667,7 +624,7 @@ and `html-helper-never-indent'."
     (let ((m (point-marker))
           (bol (progn (beginning-of-line) (point))))
 
-      ;; unindent the line
+      ;; Unindent the line
       (delete-region (point) (progn (back-to-indentation) (point)))
 
       (let* ((where (html-helper-guess-prev-context))
@@ -686,13 +643,13 @@ and `html-helper-never-indent'."
             (progn
               (setq this-context (html-helper-context-symbol))
               (cond
-               ;; item start or end and last line was a list-end: go backwards
+               ;; Item start or end and last line was a list-end: go backwards
                ((and
                  (or (eq this-context 'item-start) (eq this-context 'item-end))
                  (eq prev-context 'list-end))
                 (setq newi (- newi html-helper-item-continue-indent)))
 
-               ;; end of list and last line was an end: go backwards twice
+               ;; End of list and last line was an end: go backwards twice
                ((and (eq this-context 'list-end) (eq prev-context 'list-end))
                 (setq newi (- newi html-helper-item-continue-indent html-helper-basic-offset)))
 
@@ -700,31 +657,30 @@ and `html-helper-never-indent'."
                ((and (eq this-context 'list-end))
                 (setq newi (- newi html-helper-basic-offset)))
 
-               ;; start of list and last line beginning of item, go forwards
+               ;; Start of list and last line beginning of item, go forwards
                ((and (eq this-context 'list-start) (eq prev-context 'item-start))
                 (setq newi (+ newi html-helper-item-continue-indent)))))
 
-          ;; default: no special case, indent forward for text
+          ;; Default: no special case, indent forward for text
           (cond
-           ;; last line an item? Beginning of continued item - go forward
+           ;; Last line an item? Beginning of continued item - go forward
            ((eq prev-context 'item-start)
             (setq newi (+ newi html-helper-item-continue-indent)))))
 
         (if html-helper-print-indent-info
             (message "Last Context: %s, This Context: %s, Previous: %s New: %s" prev-context this-context previ newi))
 
-        ;; just in case
+        ;; Just in case
         (if (< newi 0)
             (setq newi 0))
         (indent-to newi newi)
 
-        ;; adjust point to where it was before, or at start of indentation
+        ;; Adjust point to where it was before, or at start of indentation
         (goto-char (marker-position m))
         (if (< (current-column) (current-indentation))
             (back-to-indentation))))))
 
-;;}}}
-;;{{{ completion finder for tempo
+;; 12 Completion finder for tempo
 
 (defvar html-helper-completion-finder
   (if html-helper-emacs18
@@ -732,10 +688,9 @@ and `html-helper-never-indent'."
     "\\(\\(<\\|&\\).*\\)\\=")
   "Passed to tempo-use-tag-list, used to find tags to complete.")
 
-;; The regexp finds everything between the last < or & and point,
-;; which is good enough to match the tags HTML might complete.
-;; emacs18 doesn't have the \= for regexps, though, so we do something
-;; more hackish.
+;; The regexp finds everything between the last < or & and point, which is good
+;; enough to match the tags HTML might complete. emacs18 doesn't have the \= for
+;; regexps, though, so we do something more hackish.
 
 (defun html-helper-emacs18-completion-finder ()
   "Unfortunately emacs18 doesn't support \\= in regexps, so we do this hack.
@@ -748,9 +703,7 @@ If you have problems with it, maybe you should upgrade to emacs19 :-)"
                            (point))))))
     (cons s where)))
 
-;;}}}
-
-;;{{{ timestamps
+;; 13 Timestamps
 
 (defun html-helper-update-timestamp ()
   "Basic function for updating timestamps.
@@ -790,8 +743,7 @@ Useful for adding timestamps to existing buffers."
   (insert html-helper-timestamp-start)
   (insert html-helper-timestamp-end))
 
-;;}}}
-;;{{{ html-helper-insert-new-buffer-strings
+;; 14 Insert new buffer strings
 
 (tempo-define-template "html-skeleton" html-helper-new-buffer-template
                        nil
@@ -801,16 +753,12 @@ Useful for adding timestamps to existing buffers."
   "Insert `html-helper-new-buffer-strings'."
   (tempo-template-html-skeleton))
 
-;;}}}
-
-;;{{{ html-helper-mode
+;; 16 Main function
 
 (defun html-helper-mode ()
   "Mode for editing HTML documents.
-For more documentation and the newest version,
-see http://www.santafe.edu/~nelson/tools/
 
-The main function html-helper-mode provides is a menu and keybindings
+The main function html-helper-mode provides a menu and keybindings
 for the HTML tags one inserts when writing HTML documents. Selecting
 the menu item or typing the key sequence for a command inserts the
 corresponding tag and places point in the right place. If a prefix
@@ -821,7 +769,7 @@ There is also code for indentation, timestamps, skeletons for new
 documents, and lots of other neat features.
 
 \\{html-helper-mode-map}
-Written by nelson@santafe.edu, http://www.santafe.edu/~nelson/
+Written by Nelson Minar
 "
   (interactive)
   (kill-all-local-variables)
@@ -840,16 +788,14 @@ Written by nelson@santafe.edu, http://www.santafe.edu/~nelson/
   (make-local-variable 'indent-line-function)
 
   ;; font-lock setup for various emacsen: XEmacs, Emacs 19.29+, Emacs <19.29.
-  ;; By Ulrik Dickow <dickow@nbi.dk>. (Last update: 05-Sep-1995).
+  ;; By Ulrik Dickow <dickow@nbi.dk>.
   (cond ((string-match "XEmacs\\|Lucid" (emacs-version)) ; XEmacs/Lucid
          (put major-mode 'font-lock-keywords-case-fold-search t))
         ;; XEmacs (19.13, at least) guesses the rest correctly.
         ;; If any older XEmacsen don't, then tell me.
-        ;;
         ((string-lessp "19.28.89" emacs-version) ; Emacs 19.29 and later
          (make-local-variable 'font-lock-defaults)
          (setq font-lock-defaults '(html-helper-font-lock-keywords t t)))
-        ;;
         (t ; Emacs 19.28 and older
          (make-local-variable 'font-lock-keywords-case-fold-search)
          (make-local-variable 'font-lock-keywords)
@@ -878,20 +824,15 @@ Written by nelson@santafe.edu, http://www.santafe.edu/~nelson/
   (run-hooks 'html-mode-hook)
   (run-hooks 'html-helper-mode-hook))
 
-;;}}}
-
-;;{{{ patterns for font-lock
+;; 17 Patterns for font-lock
 
 ;; By Ulrik Dickow <dickow@nbi.dk>.
-;;
 ;; Originally aimed at Emacs 19.29. Later on disabled syntactic fontification
 ;; and reordered regexps completely, to be compatible with XEmacs (it doesn't
 ;; understand OVERRIDE=`keep').
-;;
 ;; We make an effort on handling nested tags intelligently.
-
 ;; font-lock compatibility with XEmacs/Lucid and older Emacsen (<19.29).
-;;
+
 (if (string-match "XEmacs\\|Lucid" (emacs-version))
     ;; XEmacs/Lucid
     ;; Make needed faces if the user hasn't already done so.
@@ -913,8 +854,8 @@ Written by nelson@santafe.edu, http://www.santafe.edu/~nelson/
           (set-face-foreground 'font-lock-variable-name-face "salmon"))
       (if (funcall change-it 'font-lock-reference-face)
           (set-face-foreground 'font-lock-reference-face "violet")))
+
   ;; Emacs (any version)
-  ;;
   ;; Note that Emacs evaluates the face entries in `font-lock-keywords',
   ;; while XEmacs doesn't. So XEmacs doesn't use the following *variables*,
   ;; but instead the faces with the same names as the variables.
@@ -924,7 +865,6 @@ Written by nelson@santafe.edu, http://www.santafe.edu/~nelson/
     "Face used as italic. Typically `italic'.")
   (defvar html-helper-underline-face 'underline
     "Face used as underline. Typically `underline'.")
-  ;;
   (if (string-lessp "19.28.89" emacs-version)
       () ; Emacs 19.29 and later
     ;; Emacs 19.28 and older
@@ -1003,12 +943,7 @@ Written by nelson@santafe.edu, http://www.santafe.edu/~nelson/
      '("<!\\(--\\([^-]\\|-[^-]\\)*--\\s-*\\)*>" 0 font-lock-comment-face t)))
   "Additional expressions to highlight in HTML helper mode.")
 
-;;}}}
-;;{{{ patterns for hilit19
-
-;; Define some useful highlighting patterns for the hilit19 package.
-;; These will activate only if hilit19 has already been loaded.
-;; Thanks to <dickow@nbi.dk> for some pattern suggestions
+;; 18 Patterns for hilit19
 
 (if (featurep 'hilit19)
     (hilit-set-mode-patterns
@@ -1030,8 +965,6 @@ Written by nelson@santafe.edu, http://www.santafe.edu/~nelson/
        ("<" ">" keyword))
      nil 'case-insensitive)
   nil)
-
-;;}}}
 
 (provide 'html-helper-mode)
 (provide 'html-mode) ; for 14 character filename
