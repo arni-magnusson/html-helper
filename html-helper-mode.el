@@ -1,88 +1,50 @@
-;;; html-helper-mode.el --- Major mode for composing html files.
-
-;; Author: Nelson Minar <nelson@santafe.edu>
-;; Maintainer: Nelson Minar <nelson@santafe.edu>
-;; Created: 01 Feb 1994
-;; $Id: html-helper-mode.el,v 2.19.1.1 1998/08/06 18:53:03 nelson Exp $
-;; Keywords: HTML major-mode
-
-;; LCD Archive Entry:
-;; html-helper-mode|Nelson Minar|nelson@santafe.edu|
-;; Major mode for editing HTML.|
-;; 16-Mar-94|Version 2.?|ftp://ftp.reed.edu/pub/src/html-helper-mode.tar.Z
+;;; html-helper-mode.el --- Major mode for editing HTML files
 
 ;; Copyright (C) 1994 Nelson Minar
-;; Copyright (C) 1995 Nelson Minar and Ulrik Dickow
+;; Copyright (C) 1998 Nelson Minar and Ulrik Dickow
 
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 2, or (at your option)
-;; any later version.
+;; Author:     Nelson Minar
+;; Maintainer: Arni Magnusson
+;; Keywords:   languages
+;; URL:        https://github.com/arni-magnusson/html-helper
 
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-;; GNU General Public License for more details.
-
-;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING. If not, write to
-;; the Free Software Foundation, 675 Massachusettes Ave,
-;; Cambridge, MA 02139, USA.
+(defconst html-helper-mode-version (substring "$Revision: 2.19.1.1 $" 11 15))
 
 ;;; Commentary:
-;;{{{
 
-;; Installation:
-;;   Add this line in your .emacs:
-;;     (autoload 'html-helper-mode "html-helper-mode" "Yay HTML" t)
-;;   To invoke html-helper-mode automatically on .html files, do this:
-;;     (setq auto-mode-alist (cons '("\\.html$" . html-helper-mode) auto-mode-alist))
+;; html-helper-mode makes it easier to write HTML documents. This mode
+;; handles inserting HTML codes in a variety of ways (keybindings, menus,
+;; completion in the buffer). It also supports indentation, timestamps,
+;; skeletons for new documents, hilit19 patterns, and a variety of other
+;; things.
 ;;
-;;   This mode requires another lisp file, tempo.el. This can be
-;;     retrieved from ftp://ftp.lysator.liu.se/pub/emacs/tempo.el
-;;   Xemacs users need to have auc-menu installed.
-;;   Emacs 18 users need to have auc-menu and add-hook installed.
-;;   If your OS has broken 14 character filenames
-;;      this mode will also work with the name "html-mode.el".
-
+;; Installation:
+;;
+;; Add this line in your .emacs:
+;;   (autoload 'html-helper-mode "html-helper-mode" "Yay HTML" t)
+;; To invoke html-helper-mode automatically on .html files, do this:
+;;   (setq auto-mode-alist (cons '("\\.html$" . html-helper-mode) auto-mode-alist))
+;;
 ;; Configuration:
-;;   see the "user variables" section, or the documentation on configuration
-;;   in http://www.santafe.edu/~nelson/tools/. There are variables you want to
-;;   configure, particularly html-helper-address-string and
-;;   html-helper-use-expert-menu
-
-;; Description:
-;;   html-helper-mode makes it easier to write HTML documents. This mode
-;;   handles inserting HTML codes in a variety of ways (keybindings, menus,
-;;   completion in the buffer). It also supports indentation, timestamps,
-;;   skeletons for new documents, hilit19 patterns, and a variety of other
-;;   things. For the full skinny, see the HTML documentation that comes
-;;   with the package or is at http://www.santafe.edu/~nelson/tools/
+;;
+;; See the "user variables" section. There are variables you want to configure,
+;; particularly html-helper-address-string and html-helper-use-expert-menu.
 
 ;; Thank yous:
-;;   David Kagedal <davidk@lysator.liu.se> for the tempo code which
-;;     forms the core of the HTML insertion, as well as the HTML+ tags.
-;;   Marc Hedlund <march@europa.com> for general encouragement and
-;;     many helpful suggestions, especially with HTML/2.0 compliance
-;;     and form design.
-;;   Ulrik Dickow <dickow@nbi.dk> for the font-lock code
-;;   Denis Howe <dbh@doc.ic.ac.uk> for writing browse-url.
-;;   Magnus Homann <d0asta@dtek.chalmers.se> and Jamshid Afshar
-;;     <jamshid@ses.com> for timestamp suggestions.
-;;   Everyone who sent me a version of menus (16 in all!)
-;;   Marc Andreessen <marca@mcom.com> for writing the original html-mode
-
-;; The newest version of html-helper-mode should always be available from
-;;   http://www.santafe.edu/~nelson/tools/
-
-;; This code was writting using folding.el, a wonderful folding editor
-;; minor mode for emacs. That's what the strange {{{ comments are for.
-
-;;}}}
+;;
+;; David Kagedal <davidk@lysator.liu.se> for the tempo code which forms the core
+;;   of the HTML insertion, as well as the HTML+ tags.
+;; Marc Hedlund <march@europa.com> for general encouragement and many helpful
+;;   suggestions, especially with HTML/2.0 compliance and form design.
+;; Ulrik Dickow <dickow@nbi.dk> for the font-lock code.
+;; Denis Howe <dbh@doc.ic.ac.uk> for writing browse-url.
+;; Magnus Homann <d0asta@dtek.chalmers.se> and Jamshid Afshar <jamshid@ses.com>
+;;   for timestamp suggestions.
+;; Everyone who sent me a version of menus (16 in all!).
+;; Marc Andreessen <marca@mcom.com> for writing the original html-mode.
 
 ;;; Code:
 
-(defconst html-helper-mode-version (substring "$Revision: 2.19.1.1 $" 11 15))
 ;;{{{ user variables
 
 ;; Set this to be whatever signature you want on the bottom of your pages.
