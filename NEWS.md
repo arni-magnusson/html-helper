@@ -1,3 +1,11 @@
+# html-helper-mode 4.1.0 (2023-09-01)
+
+* Changed `font-lock-reference-face` to `font-lock-constant-face` to revive
+  syntax highlighting in Emacs 29.1.
+
+
+
+
 # html-helper-mode 4.0.1 (2023-09-01)
 
 * Removed obsolete `html-helper-emacs18` support.

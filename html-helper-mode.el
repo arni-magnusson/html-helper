@@ -1,14 +1,15 @@
 ;;; html-helper-mode.el --- Major mode for editing HTML files
 
-;; Copyright (C) 1994 Nelson Minar
-;; Copyright (C) 1998 Nelson Minar and Ulrik Dickow
+;; Copyright (C) 1994-1997 Nelson Minar
+;; Copyright (C) 1998-2022 Nelson Minar and Ulrik Dickow
+;; Copyright (C) 2023-     Nelson Minar, Ulrik Dickow, and Arni Magnusson
 
 ;; Author:     Nelson Minar
 ;; Maintainer: Arni Magnusson
 ;; Keywords:   languages
 ;; URL:        https://github.com/arni-magnusson/html-helper
 
-(defconst html-helper-mode-version "4.0.1" "HTML Helper Mode version number")
+(defconst html-helper-mode-version "4.1.0" "HTML Helper Mode version number")
 
 ;;; Commentary:
 
@@ -823,8 +824,8 @@ Written by Nelson Minar
           (set-face-underline-p 'html-helper-underline-face t))
       (if (funcall change-it 'font-lock-variable-name-face)
           (set-face-foreground 'font-lock-variable-name-face "salmon"))
-      (if (funcall change-it 'font-lock-reference-face)
-          (set-face-foreground 'font-lock-reference-face "violet")))
+      (if (funcall change-it 'font-lock-constant-face)
+          (set-face-foreground 'font-lock-constant-face "violet")))
 
   ;; Emacs (any version)
   ;; Note that Emacs evaluates the face entries in `font-lock-keywords',
@@ -842,7 +843,7 @@ Written by Nelson Minar
     ;; Define face variables that don't exist until Emacs 19.29.
     (defvar font-lock-variable-name-face 'font-lock-doc-string-face
       "Face to use for variable names -- and some HTML keywords.")
-    (defvar font-lock-reference-face 'underline ; Ugly at line breaks
+    (defvar font-lock-constant-face 'underline ; Ugly at line breaks
       "Face to use for references -- including HTML hyperlink texts.")))
 
 (defvar html-helper-font-lock-keywords
@@ -872,7 +873,7 @@ Written by Nelson Minar
      ;; First fontify the text of a HREF anchor. It may be overridden later.
      ;; Anchors in headings will be made bold, for instance.
      '("<a\\s-+href[^>]*>\\([^>]+\\)</a>"
-       1 font-lock-reference-face t)
+       1 font-lock-constant-face t)
      ;; Tag pairs like <b>...</b> etc.
      ;; Cunning repeated fontification to handle common cases of overlap.
      ;; Bold complex --- possibly with arbitrary other non-bold stuff inside.
