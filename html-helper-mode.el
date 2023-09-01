@@ -9,7 +9,7 @@
 ;; Keywords:   languages
 ;; URL:        https://github.com/arni-magnusson/html-helper
 
-(defconst html-helper-mode-version "4.1.0" "HTML Helper Mode version number")
+(defconst html-helper-mode-version "4.1.1" "HTML Helper Mode version number")
 
 ;;; Commentary:
 

@@ -1,3 +1,10 @@
+# html-helper-mode 4.1.1 (2023-09-01)
+
+* Formatted code to 80 cols.
+
+
+
+
 # html-helper-mode 4.1.0 (2023-09-01)
 
 * Changed `font-lock-reference-face` to `font-lock-constant-face` to revive
