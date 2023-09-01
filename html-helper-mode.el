@@ -30,17 +30,18 @@
 ;; See the "user variables" section. There are variables you want to configure,
 ;; particularly `html-helper-address-string' and `html-helper-use-expert-menu'.
 
-;; Thank yous:
+;; Acknowledgements:
 ;;
+;; Ulrik Dickow <dickow@nbi.dk> for the font-lock code.
+;; Arni Magnusson <thisisarni@gmail.com> for adapting the 1998 code to Emacs 29.
 ;; David Kagedal <davidk@lysator.liu.se> for the tempo code which forms the core
 ;;   of the HTML insertion, as well as the HTML+ tags.
 ;; Marc Hedlund <march@europa.com> for general encouragement and many helpful
 ;;   suggestions, especially with HTML/2.0 compliance and form design.
-;; Ulrik Dickow <dickow@nbi.dk> for the font-lock code.
 ;; Denis Howe <dbh@doc.ic.ac.uk> for adding browse-url support.
 ;; Magnus Homann <d0asta@dtek.chalmers.se> and Jamshid Afshar <jamshid@ses.com>
 ;;   for timestamp suggestions.
-;; Everyone who sent me a version of menus, 16 in all!
+;; Everyone who submitted a version of menus, 16 in all!
 ;; Marc Andreessen <marca@mcom.com> for writing the original `html-mode'.
 
 ;;; Code:
@@ -201,14 +202,17 @@ See code for an example."
 (mapcar 'html-helper-add-type-to-alist
         '((entity  . (nil nil html-helper-entity-menu
                           "Insert Character Entities"))
-          (textel  . (nil nil html-helper-textel-menu "Insert Text Elements"))
+          (textel  . (nil nil html-helper-textel-menu
+                          "Insert Text Elements"))
           (head    . (html-helper-head-map
                       "\C-c\C-b" html-helper-head-menu
                       "Insert Structural Elements"))
           (header  . (html-helper-header-map
-                      "\C-c\C-t" html-helper-header-menu "Insert Headers"))
+                      "\C-c\C-t" html-helper-header-menu
+                      "Insert Headers"))
           (anchor  . (html-helper-anchor-map
-                      "\C-c\C-a" html-helper-anchor-menu "Insert Hyperlinks"))
+                      "\C-c\C-a" html-helper-anchor-menu
+                      "Insert Hyperlinks"))
           (logical . (html-helper-logical-map
                       "\C-c\C-s" html-helper-logical-menu
                       "Insert Logical Styles"))
@@ -216,9 +220,11 @@ See code for an example."
                       "\C-c\C-p" html-helper-phys-menu
                       "Insert Physical Styles"))
           (list    . (html-helper-list-map
-                      "\C-c\C-l" html-helper-list-menu "Insert List Elements"))
+                      "\C-c\C-l" html-helper-list-menu
+                      "Insert List Elements"))
           (form    . (html-helper-form-map
-                      "\C-c\C-f" html-helper-form-menu "Insert Form Elements"))
+                      "\C-c\C-f" html-helper-form-menu
+                      "Insert Form Elements"))
           (image   . (html-helper-image-map
                       "\C-c\C-i" html-helper-image-menu
                       "Insert Inlined Images"))))
@@ -377,7 +383,8 @@ appropriate keymap if a key is requested. Format:
    (header "1" "<h1>" "Header 1" ("<h1>" (r "Header: ") "</h1>"))
 
    ;; Forms
-   (form "o" "<option>" "Option" (& "<option>" > ))
+   (form "o" "<option>" "Option"
+         (& "<option>" > ))
    (form "v" "<option value" "Option with Value"
          (& "<option value=\"" (r "Value: ") "\">" >))
    (form "s" "<select" "Selections"
@@ -410,7 +417,8 @@ appropriate keymap if a key is requested. Format:
    ;; Lists
    (list "t" "<dt>" "Definition Item"
          (& "<dt>" > (p "Term: ") "\n<dd>" > (r "Definition: ")))
-   (list "l" "<li>" "List Item" (& "<li>" > (r "Item: ")))
+   (list "l" "<li>" "List Item"
+         (& "<li>" > (r "Item: ")))
    (list "r" "<dir>" "DirectoryList"
          (& "<dir>" > "\n<li>" > (r "Item: ") "\n</dir>" >))
    (list "m" "<menu>" "Menu List"
@@ -433,7 +441,8 @@ appropriate keymap if a key is requested. Format:
    (image "a" nil "Aligned Image"
           ("<img align=\"" (r "Alignment: ") "\" src=\"" (r "Image URL: ")
            "\">"))
-   (image "i" "<img src=" "Image" ("<img src=\"" (r "Image URL: ") "\">"))
+   (image "i" "<img src=" "Image"
+          ("<img src=\"" (r "Image URL: ") "\">"))
    (image "e" "<img align=" "Aligned Image With Alt. Text"
           ("<img align=\"" (r "Alignment: ") "\" src=\"" (r "Image URL: ")
            "\" alt=\"" (r "Text URL: ") "\">"))
@@ -446,19 +455,25 @@ appropriate keymap if a key is requested. Format:
    (textel "\e\C-m"   nil "Paragraph"       ("<p>\n"))
 
    ;; Head elements
-   (head "H" "<head>" "Head" ("<head>\n" "</head>\n"))
-   (head "B" "<body>" "Body" ("<body>\n" "</body>\n"))
-   (head "i" "<isindex>" "Isindex" ("<isindex>\n"))
-   (head "n" "<nextid>" "Nextid" ("<nextid>\n"))
+   (head "H" "<head>" "Head"
+         ("<head>\n" "</head>\n"))
+   (head "B" "<body>" "Body"
+         ("<body>\n" "</body>\n"))
+   (head "i" "<isindex>" "Isindex"
+         ("<isindex>\n"))
+   (head "n" "<nextid>" "Nextid"
+         ("<nextid>\n"))
    (head "h" "<meta http-equiv=" "HTTP Equivalent"
          ("<meta http-equiv=\"" (p "Equivalent: ") "\" content=\""
           (r "Content: ") "\">\n"))
    (head "m" "<meta name=" "Meta Name"
          ("<meta name=\"" (p "Name: ") "\" content=\"" (r "Content: ") "\">\n"))
-   (head "l" "<link" "Link" ("<link href=\"" p "\">"))
-   (head "b" "<base" "Base" ("<base href=\"" r "\">"))
-   (head "t" "<title>" "Title" ("<title>" (r "Document title: ") "</title>"))
-   ))
+   (head "l" "<link" "Link"
+         ("<link href=\"" p "\">"))
+   (head "b" "<base" "Base"
+         ("<base href=\"" r "\">"))
+   (head "t" "<title>" "Title"
+         ("<title>" (r "Document title: ") "</title>"))))
 
 ;; 8  Smart insert item
 
@@ -802,7 +817,7 @@ There is also code for indentation, timestamps, skeletons for new
 documents, and lots of other neat features.
 
 \\{html-helper-mode-map}
-Written by Nelson Minar
+Written by Nelson Minar.
 "
   (interactive)
   (kill-all-local-variables)
@@ -856,16 +871,16 @@ Written by Nelson Minar
   "Face used as underline. Typically `underline'.")
 
 (defvar html-helper-font-lock-keywords
-  (let (;; Titles and H1's, like function defs.
-        ;; We allow for HTML 3.0 attributes, like `<h1 align=center>'.
+  (let (;; Titles and H1's, like function defs
+        ;; We allow for HTML 3.0 attributes, like `<h1 align=center>'
         (tword "\\(h1\\|title\\)\\([ \t\n]+[^>]+\\)?")
-        ;; Names of tags to boldify.
+        ;; Names of tags to boldify
         (bword "\\(b\\|h[2-4]\\|strong\\)\\([ \t\n]+[^>]+\\)?")
-        ;; Names of tags to italify.
+        ;; Names of tags to italify
         (iword "\\(address\\|cite\\|em\\|i\\|var\\)\\([ \t\n]+[^>]+\\)?")
-        ;; Regexp to match shortest sequence that surely isn't a bold end.
-        ;; We simplify a bit by extending "</strong>" to "</str.*".
-        ;; Do similarly for non-italic and non-title ends.
+        ;; Regexp to match shortest sequence that surely isn't a bold end
+        ;; We simplify a bit by extending "</strong>" to "</str.*"
+        ;; Do similarly for non-italic and non-title ends
         (not-bend (concat "\\([^<]\\|<\\([^/]\\|/\\([^bhs]\\|"
                           "b[^>]\\|"
                           "h\\([^2-4]\\|[2-4][^>]\\)\\|"
@@ -879,27 +894,27 @@ Written by Nelson Minar
         (not-tend (concat "\\([^<]\\|<\\([^/]\\|/\\([^ht]\\|"
                           "h[^1]\\|t\\([^i]\\|i[^t]\\)\\)\\)\\)")))
     (list
-     ;; First fontify the text of a HREF anchor. It may be overridden later.
-     ;; Anchors in headings will be made bold, for instance.
+     ;; First fontify the text of a HREF anchor, it may be overridden later
+     ;; Anchors in headings will be made bold, for instance
      '("<a\\s-+href[^>]*>\\([^>]+\\)</a>"
        1 font-lock-constant-face t)
-     ;; Tag pairs like <b>...</b> etc.
-     ;; Cunning repeated fontification to handle common cases of overlap.
-     ;; Bold complex --- possibly with arbitrary other non-bold stuff inside.
+     ;; Tag pairs like <b>...</b> etc
+     ;; Cunning repeated fontification to handle common cases of overlap
+     ;; Bold complex --- possibly with arbitrary other non-bold stuff inside
      (list (concat "<" bword ">\\(" not-bend "*\\)</\\1>")
            3 'html-helper-bold-face t)
-     ;; Italic complex --- possibly with arbitrary non-italic kept inside.
+     ;; Italic complex --- possibly with arbitrary non-italic kept inside
      (list (concat "<" iword ">\\(" not-iend "*\\)</\\1>")
            3 'html-helper-italic-face t)
-     ;; Bold simple --- first fontify bold regions with no tags inside.
+     ;; Bold simple --- first fontify bold regions with no tags inside
      (list (concat "<" bword ">\\(" "[^<]" "*\\)</\\1>")
            3 'html-helper-bold-face t)
-     ;; Any tag, general rule, just after bold/italic stuff.
+     ;; Any tag, general rule, just after bold/italic stuff
      '("\\(<[^>]*>\\)" 1 font-lock-type-face t)
      ;; Titles and level 1 headings (anchors do sometimes appear in h1's)
      (list (concat "<" tword ">\\(" not-tend "*\\)</\\1>")
            3 'font-lock-function-name-face t)
-     ;; Underline is rarely used. Only handle it when no tags inside.
+     ;; Underline is rarely used. Only handle it when no tags inside
      '("<u>\\([^<]*\\)</u>" 1 html-helper-underline-face t)
      ;; Forms, anchors & images (also fontify strings inside)
      '("<\\(form\\|i\\(mg\\|nput\\)\\)\\>[^>]*>"
@@ -907,20 +922,20 @@ Written by Nelson Minar
      '("</a>" 0 font-lock-keyword-face t)
      '("<a\\b[^>]*>" 0 font-lock-keyword-face t)
      '("=[ \t\n]*\\(\"[^\"]+\"\\)" 1 font-lock-string-face t)
-     ;; Large-scale structure keywords (like "program" in Fortran).
+     ;; Large-scale structure keywords (like "program" in Fortran)
      ;; "<html>" "</html>" "<body>" "</body>" "<head>" "</head>" "</form>"
      '("</?\\(body\\|form\\|h\\(ead\\|tml\\)\\)>"
        0 font-lock-variable-name-face t)
      ;; HTML special characters
      '("&[^;\n]*;" 0 font-lock-string-face t)
-     ;; SGML things like <!DOCTYPE ...> with possible <!ENTITY...> inside.
+     ;; SGML things like <!DOCTYPE ...> with possible <!ENTITY...> inside
      '("<![a-z]+\\>[^<>]*\\(<[^>]*>[^<>]*\\)*>"
        0 font-lock-comment-face t)
      ;; Comment declarations according to the HTML 2.0 spec at
-     ;; <URL:http://www.w3.org/pub/WWW/MarkUp/html-spec/html-spec_3.html>.
+     ;; <URL:http://www.w3.org/pub/WWW/MarkUp/html-spec/html-spec_3.html>
      ;; Usually `<!-- ... -->', but also e.g the single, complete declaration
-     ;; `<!--c1--  -- c2 -- -->c3 (still comment) ----c4- c4--   >'.
-     ;; Note that e.g. Netscape 3.01 Gold doesn't fully live up to the spec.
+     ;; `<!--c1--  -- c2 -- -->c3 (still comment) ----c4- c4--   >'
+     ;; Note that e.g. Netscape 3.01 Gold doesn't fully live up to the spec
      '("<!\\(--\\([^-]\\|-[^-]\\)*--\\s-*\\)*>" 0 font-lock-comment-face t)))
   "Additional expressions to highlight in HTML helper mode.")
 
