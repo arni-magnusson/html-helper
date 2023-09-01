@@ -15,8 +15,7 @@
 ;; `html-helper-mode' makes it easier to write HTML documents. This mode
 ;; handles inserting HTML codes in a variety of ways (keybindings, menus,
 ;; completion in the buffer). It also supports indentation, timestamps,
-;; skeletons for new documents, hilit19 patterns, and a variety of other
-;; things.
+;; skeletons for new documents, and a variety of other things.
 ;;
 ;; Installation:
 ;;
@@ -942,29 +941,6 @@ Written by Nelson Minar
      ;; Note that e.g. Netscape 3.01 Gold doesn't fully live up to the spec.
      '("<!\\(--\\([^-]\\|-[^-]\\)*--\\s-*\\)*>" 0 font-lock-comment-face t)))
   "Additional expressions to highlight in HTML helper mode.")
-
-;; 17 Patterns for hilit19
-
-(if (featurep 'hilit19)
-    (hilit-set-mode-patterns
-     'html-helper-mode
-     '(("<!--" "-->" comment)
-       ("<![a-z]+\\>[^<>]*\\(<[^>]*>[^<>]*\\)*>" nil comment) ;<!DOCTYPE ...>
-       ("<title>" "</title>" defun)
-       ("<h[1-6]>" "</h[1-6]>" bold) ;only colour inside tag
-       ("<a\\b" ">" define)
-       ("</a>" nil define)
-       ("<img\\b" ">" include)
-       ("<option\\|</?select\\|<input\\|</?form\\|</?textarea" ">" include)
-       ;; First <i> highlighting just handles unnested tags, then do nesting
-       ("<i>[^<]*</i>" nil italic)
-       ("<b>" "</b>" bold)
-       ("<i>" "</i>" italic)
-       ("<u>" "</u>" underline)
-       ("&[^;\n]*;" nil string)
-       ("<" ">" keyword))
-     nil 'case-insensitive)
-  nil)
 
 (provide 'html-helper-mode)
 (provide 'html-mode) ; for 14 character filename
