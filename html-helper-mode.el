@@ -753,7 +753,7 @@ Useful for adding timestamps to existing buffers."
   "Insert `html-helper-new-buffer-strings'."
   (tempo-template-html-skeleton))
 
-;; 16 Main function
+;; 15 Main function
 
 (defun html-helper-mode ()
   "Mode for editing HTML documents.
@@ -824,7 +824,7 @@ Written by Nelson Minar
   (run-hooks 'html-mode-hook)
   (run-hooks 'html-helper-mode-hook))
 
-;; 17 Patterns for font-lock
+;; 16 Patterns for font-lock
 
 ;; By Ulrik Dickow <dickow@nbi.dk>.
 ;; Originally aimed at Emacs 19.29. Later on disabled syntactic fontification
@@ -943,7 +943,7 @@ Written by Nelson Minar
      '("<!\\(--\\([^-]\\|-[^-]\\)*--\\s-*\\)*>" 0 font-lock-comment-face t)))
   "Additional expressions to highlight in HTML helper mode.")
 
-;; 18 Patterns for hilit19
+;; 17 Patterns for hilit19
 
 (if (featurep 'hilit19)
     (hilit-set-mode-patterns
