@@ -23,7 +23,7 @@
 ;; Add this line in your .emacs:
 ;;   (autoload 'html-helper-mode "html-helper-mode" "Yay HTML" t)
 ;; To invoke `html-helper-mode' automatically on .html files, do this:
-;;   (setq auto-mode-alist (cons '("\\.html$" . html-helper-mode) auto-mode-alist))
+;;   (add-to-list 'auto-mode-alist '("\\.html$" . html-helper-mode))
 ;;
 ;; Configuration:
 ;;
@@ -64,7 +64,8 @@
 (defvar html-helper-build-new-buffer t
   "*If not nil, then insert `html-helper-new-buffer-strings' for new buffers.")
 
-(defvar html-helper-htmldtd-version "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML//EN\">\n"
+(defvar html-helper-htmldtd-version
+  "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML//EN\">\n"
   "*Version of HTML DTD you're using.")
 
 (defvar html-helper-user-menu nil
@@ -136,7 +137,8 @@ Order is significant: menus go in this order.")
 
 (if html-helper-mode-syntax-table
     ()
-  (setq html-helper-mode-syntax-table (make-syntax-table text-mode-syntax-table))
+  (setq html-helper-mode-syntax-table
+        (make-syntax-table text-mode-syntax-table))
   (modify-syntax-entry ?<  "(>  " html-helper-mode-syntax-table)
   (modify-syntax-entry ?>  ")<  " html-helper-mode-syntax-table)
   (modify-syntax-entry ?\" ".   " html-helper-mode-syntax-table)
@@ -197,16 +199,29 @@ See code for an example."
 
 ;; Types provided by html-helper-mode
 (mapcar 'html-helper-add-type-to-alist
-        '((entity  . (nil nil html-helper-entity-menu "Insert Character Entities"))
+        '((entity  . (nil nil html-helper-entity-menu
+                          "Insert Character Entities"))
           (textel  . (nil nil html-helper-textel-menu "Insert Text Elements"))
-          (head    . (html-helper-head-map "\C-c\C-b" html-helper-head-menu "Insert Structural Elements"))
-          (header  . (html-helper-header-map "\C-c\C-t" html-helper-header-menu "Insert Headers"))
-          (anchor  . (html-helper-anchor-map "\C-c\C-a" html-helper-anchor-menu "Insert Hyperlinks"))
-          (logical . (html-helper-logical-map "\C-c\C-s" html-helper-logical-menu "Insert Logical Styles"))
-          (phys    . (html-helper-phys-map "\C-c\C-p" html-helper-phys-menu "Insert Physical Styles"))
-          (list    . (html-helper-list-map "\C-c\C-l" html-helper-list-menu "Insert List Elements"))
-          (form    . (html-helper-form-map "\C-c\C-f" html-helper-form-menu "Insert Form Elements"))
-          (image   . (html-helper-image-map "\C-c\C-i" html-helper-image-menu "Insert Inlined Images"))))
+          (head    . (html-helper-head-map
+                      "\C-c\C-b" html-helper-head-menu
+                      "Insert Structural Elements"))
+          (header  . (html-helper-header-map
+                      "\C-c\C-t" html-helper-header-menu "Insert Headers"))
+          (anchor  . (html-helper-anchor-map
+                      "\C-c\C-a" html-helper-anchor-menu "Insert Hyperlinks"))
+          (logical . (html-helper-logical-map
+                      "\C-c\C-s" html-helper-logical-menu
+                      "Insert Logical Styles"))
+          (phys    . (html-helper-phys-map
+                      "\C-c\C-p" html-helper-phys-menu
+                      "Insert Physical Styles"))
+          (list    . (html-helper-list-map
+                      "\C-c\C-l" html-helper-list-menu "Insert List Elements"))
+          (form    . (html-helper-form-map
+                      "\C-c\C-f" html-helper-form-menu "Insert Form Elements"))
+          (image   . (html-helper-image-map
+                      "\C-c\C-i" html-helper-image-menu
+                      "Insert Inlined Images"))))
 
 ;; Once html-helper-mode is aware of a type, it can then install the type:
 ;; arrange for keybindings, menus, etc.
@@ -261,7 +276,8 @@ with `html-helper-add-type-to-alist'."
 ;; Browse URL stuff
 (if (fboundp 'browse-url-of-file)
     (define-key html-helper-mode-functions-map "v" 'browse-url-of-file))
-(if (and (boundp 'browse-url-browser-function) (fboundp browse-url-browser-function))
+(if (and (boundp 'browse-url-browser-function)
+         (fboundp browse-url-browser-function))
     (define-key html-helper-mode-functions-map "u" browse-url-browser-function))
 
 ;; 6  Basic tags
@@ -332,24 +348,25 @@ appropriate keymap if a key is requested. Format:
    (entity "\C-c<"  "&lt;"   "Less Than"         ("&lt;"))
 
    ;; Logical styles
-   (logical "b" "<blockquote>" "Blockquote"     ("<blockquote>" (r "Quote: ") "</blockquote>"))
-   (logical "c" "<code>"       "Code"           ("<code>" (r "Code: ") "</code>"))
-   (logical "x" "<samp>"       "Sample"         ("<samp>" (r "Sample code") "</samp>"))
-   (logical "r" "<cite>"       "Citation"       ("<cite>" (r "Citation: ") "</cite>"))
-   (logical "k" "<kbd>"        "Keyboard Input" ("<kbd>" (r "Keyboard: ") "</kbd>"))
-   (logical "v" "<var>"        "Variable"       ("<var>" (r "Variable: ") "</var>"))
-   (logical "d" "<dfn>"        "Definition"     ("<dfn>" (r "Definition: ") "</dfn>"))
-   (logical "a" "<address>"    "Address"        ("<address>" r "</address>"))
-   (logical "e" "<em>"         "Emphasized"     ("<em>" (r "Text: ") "</em>"))
-   (logical "s" "<strong>"     "Strong"         ("<strong>" (r "Text: ") "</strong>"))
-   (logical "p" "<pre>"        "Preformatted"   ("<pre>" (r "Text: ") "</pre>"))
+   (logical "b" "<blockquote>" "Blockquote"
+            ("<blockquote>" (r "Quote: ") "</blockquote>"))
+   (logical "c" "<code>" "Code" ("<code>" (r "Code: ") "</code>"))
+   (logical "x" "<samp>" "Sample" ("<samp>" (r "Sample code") "</samp>"))
+   (logical "r" "<cite>" "Citation" ("<cite>" (r "Citation: ") "</cite>"))
+   (logical "k" "<kbd>" "Keyboard Input" ("<kbd>" (r "Keyboard: ") "</kbd>"))
+   (logical "v" "<var>" "Variable" ("<var>" (r "Variable: ") "</var>"))
+   (logical "d" "<dfn>" "Definition" ("<dfn>" (r "Definition: ") "</dfn>"))
+   (logical "a" "<address>" "Address" ("<address>" r "</address>"))
+   (logical "e" "<em>" "Emphasized" ("<em>" (r "Text: ") "</em>"))
+   (logical "s" "<strong>" "Strong" ("<strong>" (r "Text: ") "</strong>"))
+   (logical "p" "<pre>" "Preformatted" ("<pre>" (r "Text: ") "</pre>"))
 
    ;; Physical styles
    (phys "s" "<strike>" "Strikethru" ("<strike>" (r "Text: ") "</strike>"))
-   (phys "u" "<u>"      "Underline"  ("<u>" (r "Text: ") "</u>"))
-   (phys "i" "<i>"      "Italic"     ("<i>" (r "Text: ") "</i>"))
-   (phys "b" "<b>"      "Bold"       ("<b>" (r "Text: ") "</b>"))
-   (phys "f" "<tt>"     "Fixed"      ("<tt>" (r "Text: ") "</tt>"))
+   (phys "u" "<u>"      "Underline"  ("<u>"      (r "Text: ") "</u>"))
+   (phys "i" "<i>"      "Italic"     ("<i>"      (r "Text: ") "</i>"))
+   (phys "b" "<b>"      "Bold"       ("<b>"      (r "Text: ") "</b>"))
+   (phys "f" "<tt>"     "Fixed"      ("<tt>"     (r "Text: ") "</tt>"))
 
    ;; Headers
    (header "6" "<h6>" "Header 6" ("<h6>" (r "Header: ") "</h6>"))
@@ -360,37 +377,68 @@ appropriate keymap if a key is requested. Format:
    (header "1" "<h1>" "Header 1" ("<h1>" (r "Header: ") "</h1>"))
 
    ;; Forms
-   (form "o" "<option>"      "Option"            (& "<option>" > ))
-   (form "v" "<option value" "Option with Value" (& "<option value=\"" (r "Value: ") "\">" >))
-   (form "s" "<select"       "Selections"        ("<select name=\"" (p "Name: ") "\">\n<option>" > "\n</select>")"<select")
-   (form "z" "<input"        "Reset Form"        ("<input type=\"RESET\" value=\"" (p "Reset button text: ") "\">"))
-   (form "b" "<input"        "Submit Form"       ("<input type=\"SUBMIT\" value=\"" (p "Submit button text: ") "\">"))
-   (form "i" "<input"        "Image Field"       ("<input type=\"IMAGE\" name=\"" (p "Name: ") "\" src=\"" (p "Image URL: ") "\">"))
-   (form "h" "<input"        "Hidden Field"      ("<input type=\"HIDDEN\" name=\"" (p "Name: ") "\" value=\"" (p "Value: ") "\">"))
-   (form "p" "<textarea"     "Text Area"         ("<textarea name=\"" (p "Name: ") "\" rows=\"" (p "Rows: ") "\" cols=\"" (p "Columns: ") "\">" r "</textarea>"))
-   (form "c" "<input"        "Checkbox"          ("<input type=\"CHECKBOX\" name=\"" (p "Name: ") "\">"))
-   (form "r" "<input"        "Radiobutton"       ("<input type=\"RADIO\" name=\"" (p "Name: ") "\">"))
-   (form "t" "<input"        "Text Field"        ("<input type=\"TEXT\" name=\"" (p "Name: ") "\" size=\"" (p "Size: ") "\">"))
-   (form "f" "<form"         "Form"              ("<form action=\"" (p "Action: ") "\" method=\"" (p "Method: ") "\">\n</form>\n"))
+   (form "o" "<option>" "Option" (& "<option>" > ))
+   (form "v" "<option value" "Option with Value"
+         (& "<option value=\"" (r "Value: ") "\">" >))
+   (form "s" "<select" "Selections"
+         ("<select name=\"" (p "Name: ") "\">\n<option>" > "\n</select>")
+         "<select")
+   (form "z" "<input" "Reset Form"
+         ("<input type=\"RESET\" value=\"" (p "Reset button text: ") "\">"))
+   (form "b" "<input" "Submit Form"
+         ("<input type=\"SUBMIT\" value=\"" (p "Submit button text: ") "\">"))
+   (form "i" "<input" "Image Field"
+         ("<input type=\"IMAGE\" name=\"" (p "Name: ") "\" src=\""
+          (p "Image URL: ") "\">"))
+   (form "h" "<input" "Hidden Field"
+         ("<input type=\"HIDDEN\" name=\"" (p "Name: ") "\" value=\""
+          (p "Value: ") "\">"))
+   (form "p" "<textarea" "Text Area"
+         ("<textarea name=\"" (p "Name: ") "\" rows=\"" (p "Rows: ")
+          "\" cols=\"" (p "Columns: ") "\">" r "</textarea>"))
+   (form "c" "<input" "Checkbox"
+         ("<input type=\"CHECKBOX\" name=\"" (p "Name: ") "\">"))
+   (form "r" "<input" "Radiobutton"
+         ("<input type=\"RADIO\" name=\"" (p "Name: ") "\">"))
+   (form "t" "<input" "Text Field"
+         ("<input type=\"TEXT\" name=\"" (p "Name: ") "\" size=\"" (p "Size: ")
+          "\">"))
+   (form "f" "<form" "Form"
+         ("<form action=\"" (p "Action: ") "\" method=\"" (p "Method: ")
+          "\">\n</form>\n"))
 
    ;; Lists
-   (list "t" "<dt>"   "Definition Item" (& "<dt>" > (p "Term: ") "\n<dd>" > (r "Definition: ")))
-   (list "l" "<li>"   "List Item"       (& "<li>" > (r "Item: ")))
-   (list "r" "<dir>"  "DirectoryList"   (& "<dir>" > "\n<li>" > (r "Item: ") "\n</dir>" >))
-   (list "m" "<menu>" "Menu List"       (& "<menu>" > "\n<li>" > (r "Item: ") "\n</menu>" >))
-   (list "o" "<ol>"   "Ordered List"    (& "<ol>" > "\n<li>" > (r "Item: ") "\n</ol>" >))
-   (list "d" "<dl>"   "Definition List" (& "<dl>" > "\n<dt>" > (p "Term: ") "\n<dd>" > (r "Definition: ") "\n</dl>" >))
-   (list "u" "<ul>"   "Unordered List"  (& "<ul>" > "\n<li>" > (r "Item: ") "\n</ul>" >))
+   (list "t" "<dt>" "Definition Item"
+         (& "<dt>" > (p "Term: ") "\n<dd>" > (r "Definition: ")))
+   (list "l" "<li>" "List Item" (& "<li>" > (r "Item: ")))
+   (list "r" "<dir>" "DirectoryList"
+         (& "<dir>" > "\n<li>" > (r "Item: ") "\n</dir>" >))
+   (list "m" "<menu>" "Menu List"
+         (& "<menu>" > "\n<li>" > (r "Item: ") "\n</menu>" >))
+   (list "o" "<ol>" "Ordered List"
+         (& "<ol>" > "\n<li>" > (r "Item: ") "\n</ol>" >))
+   (list "d" "<dl>" "Definition List"
+         (& "<dl>" > "\n<dt>" > (p "Term: ") "\n<dd>" > (r "Definition: ")
+            "\n</dl>" >))
+   (list "u" "<ul>" "Unordered List"
+         (& "<ul>" > "\n<li>" > (r "Item: ") "\n</ul>" >))
 
    ;; Anchors
-   (anchor "n" "<a name=" "Link Target" ("<a name=\"" (p "Anchor name: ") "\">" (r "Anchor text: ") "</a>"))
-   (anchor "l" "<a href=" "Hyperlink"   ("<a href=\"" (p "URL: ") "\">" (r "Anchor text: ") "</a>"))
+   (anchor "n" "<a name=" "Link Target"
+           ("<a name=\"" (p "Anchor name: ") "\">" (r "Anchor text: ") "</a>"))
+   (anchor "l" "<a href=" "Hyperlink"
+           ("<a href=\"" (p "URL: ") "\">" (r "Anchor text: ") "</a>"))
 
    ;; Graphics
-   (image "a" nil           "Aligned Image"                ("<img align=\"" (r "Alignment: ") "\" src=\"" (r "Image URL: ") "\">"))
-   (image "i" "<img src="   "Image"                        ("<img src=\"" (r "Image URL: ") "\">"))
-   (image "e" "<img align=" "Aligned Image With Alt. Text" ("<img align=\"" (r "Alignment: ") "\" src=\"" (r "Image URL: ") "\" alt=\"" (r "Text URL: ") "\">"))
-   (image "t" "<img alt="   "Image With Alternate Text"    ("<img alt=\"" (r "Text URL: ") "\" src=\"" (r "Image URL: ") "\">"))
+   (image "a" nil "Aligned Image"
+          ("<img align=\"" (r "Alignment: ") "\" src=\"" (r "Image URL: ")
+           "\">"))
+   (image "i" "<img src=" "Image" ("<img src=\"" (r "Image URL: ") "\">"))
+   (image "e" "<img align=" "Aligned Image With Alt. Text"
+          ("<img align=\"" (r "Alignment: ") "\" src=\"" (r "Image URL: ")
+           "\" alt=\"" (r "Text URL: ") "\">"))
+   (image "t" "<img alt=" "Image With Alternate Text"
+          ("<img alt=\"" (r "Text URL: ") "\" src=\"" (r "Image URL: ") "\">"))
 
    ;; Text elements
    (textel "\C-c="    nil "Horizontal Line" (& "<hr>\n"))
@@ -398,15 +446,18 @@ appropriate keymap if a key is requested. Format:
    (textel "\e\C-m"   nil "Paragraph"       ("<p>\n"))
 
    ;; Head elements
-   (head "H" "<head>"            "Head"            ("<head>\n" "</head>\n"))
-   (head "B" "<body>"            "Body"            ("<body>\n" "</body>\n"))
-   (head "i" "<isindex>"         "Isindex"         ("<isindex>\n"))
-   (head "n" "<nextid>"          "Nextid"          ("<nextid>\n"))
-   (head "h" "<meta http-equiv=" "HTTP Equivalent" ("<meta http-equiv=\"" (p "Equivalent: ") "\" content=\"" (r "Content: ") "\">\n"))
-   (head "m" "<meta name="       "Meta Name"       ("<meta name=\"" (p "Name: ") "\" content=\"" (r "Content: ") "\">\n"))
-   (head "l" "<link"             "Link"            ("<link href=\"" p "\">"))
-   (head "b" "<base"             "Base"            ("<base href=\"" r "\">"))
-   (head "t" "<title>"           "Title"           ("<title>" (r "Document title: ") "</title>"))
+   (head "H" "<head>" "Head" ("<head>\n" "</head>\n"))
+   (head "B" "<body>" "Body" ("<body>\n" "</body>\n"))
+   (head "i" "<isindex>" "Isindex" ("<isindex>\n"))
+   (head "n" "<nextid>" "Nextid" ("<nextid>\n"))
+   (head "h" "<meta http-equiv=" "HTTP Equivalent"
+         ("<meta http-equiv=\"" (p "Equivalent: ") "\" content=\""
+          (r "Content: ") "\">\n"))
+   (head "m" "<meta name=" "Meta Name"
+         ("<meta name=\"" (p "Name: ") "\" content=\"" (r "Content: ") "\">\n"))
+   (head "l" "<link" "Link" ("<link href=\"" p "\">"))
+   (head "b" "<base" "Base" ("<base href=\"" r "\">"))
+   (head "t" "<title>" "Title" ("<title>" (r "Document title: ") "</title>"))
    ))
 
 ;; 8  Smart insert item
@@ -421,7 +472,8 @@ appropriate keymap if a key is requested. Format:
   (let ((case-fold-search t))
     (if
         (save-excursion
-          (re-search-backward "<li>\\|<dt>\\|<ul>\\|<ol>\\|<dd>\\|<menu>\\|<dir>\\|<dl>" nil t)
+          (re-search-backward
+           "<li>\\|<dt>\\|<ul>\\|<ol>\\|<dd>\\|<menu>\\|<dir>\\|<dl>" nil t)
           (looking-at "<dt>\\|<dl>\\|<dd>"))
         (tempo-template-html-definition-item arg)
       (tempo-template-html-list-item arg))))
@@ -433,7 +485,8 @@ appropriate keymap if a key is requested. Format:
 ;; And, special menu bindings
 (and (boundp 'html-helper-list-menu)
      (setq html-helper-list-menu
-           (cons '["List Item" html-helper-smart-insert-item t] html-helper-list-menu)))
+           (cons '["List Item" html-helper-smart-insert-item t]
+                 html-helper-list-menu)))
 
 ;; 9  Menu support
 
@@ -503,7 +556,8 @@ This function can be called again, it redoes the entire menu."
       (setq html-helper-mode-menu
             (cons '["Load this Buffer in Browser" browse-url-of-file t]
                   html-helper-mode-menu)))
-  (if (and (boundp 'browse-url-browser-function) (fboundp browse-url-browser-function))
+  (if (and (boundp 'browse-url-browser-function)
+           (fboundp browse-url-browser-function))
       (setq html-helper-mode-menu
             (cons (vector "Browse URL at point" browse-url-browser-function t)
                   html-helper-mode-menu)))
@@ -535,10 +589,13 @@ This function can be called again, it redoes the entire menu."
 ;; is pretty unwieldy and slow. Note, we make select/option look like a list
 ;; structure too, so indentation works. This is a bit weird, but it's ok.
 
-(defvar html-helper-any-list-item-start "<li>\\|<dt>\\|<dd>\\|<option\\|<th>\\|<td>")
+(defvar html-helper-any-list-item-start
+  "<li>\\|<dt>\\|<dd>\\|<option\\|<th>\\|<td>")
 (defvar html-helper-any-list-item-end "</li>\\|</dt>\\|</dd>\\|</th>\\|</td>")
-(defvar html-helper-any-list-start "<dl>\\|<ul>\\|<ol>\\|<menu>\\|<dir>\\|<select\\|<table\\|<tr>")
-(defvar html-helper-any-list-end "</dl>\\|</ul>\\|</ol>\\|</menu>\\|</dir>\\|</select>\\|</table>\\|</tr>")
+(defvar html-helper-any-list-start
+  "<dl>\\|<ul>\\|<ol>\\|<menu>\\|<dir>\\|<select\\|<table\\|<tr>")
+(defvar html-helper-any-list-end
+  "</dl>\\|</ul>\\|</ol>\\|</menu>\\|</dir>\\|</select>\\|</table>\\|</tr>")
 (defvar html-helper-any-list
   (format "\\(%s\\)\\|\\(%s\\)\\|\\(%s\\)\\|\\(%s\\)"
           html-helper-any-list-start
@@ -624,7 +681,8 @@ and `html-helper-never-indent'."
              (newi (cond
                     ((eq prev-context 'list-end) previ)
                     ((eq prev-context 'item-start) previ)
-                    ((eq prev-context 'list-start) (+ previ html-helper-basic-offset))
+                    ((eq prev-context 'list-start)
+                     (+ previ html-helper-basic-offset))
                     (t previ))))
 
         ;; newi is set to the basic indentation, now adjust indentation
@@ -641,14 +699,16 @@ and `html-helper-never-indent'."
 
                ;; End of list and last line was an end: go backwards twice
                ((and (eq this-context 'list-end) (eq prev-context 'list-end))
-                (setq newi (- newi html-helper-item-continue-indent html-helper-basic-offset)))
+                (setq newi (- newi html-helper-item-continue-indent
+                              html-helper-basic-offset)))
 
                ;; Any other end of list? Indent negative
                ((and (eq this-context 'list-end))
                 (setq newi (- newi html-helper-basic-offset)))
 
                ;; Start of list and last line beginning of item, go forwards
-               ((and (eq this-context 'list-start) (eq prev-context 'item-start))
+               ((and (eq this-context 'list-start)
+                     (eq prev-context 'item-start))
                 (setq newi (+ newi html-helper-item-continue-indent)))))
 
           ;; Default: no special case, indent forward for text
@@ -658,7 +718,8 @@ and `html-helper-never-indent'."
             (setq newi (+ newi html-helper-item-continue-indent)))))
 
         (if html-helper-print-indent-info
-            (message "Last Context: %s, This Context: %s, Previous: %s New: %s" prev-context this-context previ newi))
+            (message "Last Context: %s, This Context: %s, Previous: %s New: %s"
+                     prev-context this-context previ newi))
 
         ;; Just in case
         (if (< newi 0)
@@ -692,7 +753,7 @@ will should insert an appropriate timestamp in the buffer."
                         (- (point) (length html-helper-timestamp-end))
                       nil)))
         (if (not ts-end)
-            (message "timestamp delimiter end was not found. Type C-c C-t to insert one.")
+            (message "timestamp delimiter end was not found")
           (delete-region ts-start ts-end)
           (goto-char ts-start)
           (run-hooks 'html-helper-timestamp-hook)))))
