@@ -30,7 +30,7 @@
 ;; Cambridge, MA 02139, USA.
 
 ;;; Commentary:
-;;{{{ 
+;;{{{
 
 ;; Installation:
 ;;   Add this line in your .emacs:
@@ -60,7 +60,7 @@
 ;;   with the package or is at http://www.santafe.edu/~nelson/tools/
 
 ;; Thank yous:
-;;   David Kågedal <davidk@lysator.liu.se> for the tempo code which
+;;   David KÃ¥gedal <davidk@lysator.liu.se> for the tempo code which
 ;;     forms the core of the HTML insertion, as well as the HTML+ tags.
 ;;   Marc Hedlund <march@europa.com> for general encouragement and
 ;;     many helpful suggestions, especially with HTML/2.0 compliance
@@ -322,7 +322,7 @@ with html-helper-add-type-to-alist."
   'html-helper-mode-functions-map)
 (define-key html-helper-mode-functions-map "t"
   'html-helper-insert-timestamp-delimiter-at-point)
- 
+
 ;; indentation keys - only rebind these if the user wants indentation
 (if html-helper-never-indent
     ()
@@ -414,7 +414,7 @@ appropriate keymap if a key is requested. Format:
    (entity  "\C-c&"   "&amp;"		"Ampersand"	  ("&amp;"))
    (entity  "\C-c>"   "&gt;"	  	"Greater Than"       ("&gt;"))
    (entity  "\C-c<"   "&lt;"		"Less Than"	  ("&lt;"))
-   
+
    ;; logical styles
    (logical "b"       "<blockquote>"	"Blockquote"     	  ("<blockquote>" (r "Quote: ") "</blockquote>"))
    (logical "c"       "<code>"		"Code"           	  ("<code>" (r "Code: ") "</code>"))
@@ -468,7 +468,7 @@ appropriate keymap if a key is requested. Format:
 
    ;;anchors
    (anchor  "n"	      "<a name="	"Link Target"	  ("<a name=\"" (p "Anchor name: ") "\">" (r "Anchor text: ") "</a>"))
-   (anchor  "l"	      "<a href="        "Hyperlink"          	  ("<a href=\"" (p "URL: ") "\">" (r "Anchor text: ") "</a>"))                
+   (anchor  "l"	      "<a href="        "Hyperlink"          	  ("<a href=\"" (p "URL: ") "\">" (r "Anchor text: ") "</a>"))
 
    ;;graphics
    (image   "a"       nil               "Aligned Image"	  ("<img align=\"" (r "Alignment: ") "\" src=\"" (r "Image URL: ") "\">"))
@@ -564,7 +564,7 @@ If `html-helper-use-expert-menu' is nil, then just use a novice menu."
 ;; If browse-url loaded, add this in the novice menu.
 (if (fboundp 'browse-url-of-file)
     (setq html-helper-novice-menu
-	  (append html-helper-novice-menu 
+	  (append html-helper-novice-menu
 		  (list ["Load This Buffer in Browser" browse-url-of-file t]))))
 
 ;; Expert menus: consed up out of html-helper-installed-types
@@ -573,7 +573,7 @@ If `html-helper-use-expert-menu' is nil, then just use a novice menu."
 This function can be called again, it redoes the entire menu."
   ;; first, reset this so we can call this again and again.
   (setq html-helper-mode-menu nil)
-  
+
   ;; Cons in the toggle of the menu
   (setq html-helper-mode-menu
 	(cons '["Turn on Novice Menu"
@@ -599,7 +599,7 @@ This function can be called again, it redoes the entire menu."
 	(cons '["Insert Timestamp Delimiter"
 		html-helper-insert-timestamp-delimiter-at-point t]
 	      html-helper-mode-menu))
-  
+
   ;; now cons up the main menu out of the submenus
   (mapcar
    (function (lambda (type)
@@ -712,7 +712,7 @@ and `html-helper-never-indent'."
 	     (prev-context (car where))
 	     (this-context nil)
 	     (previ (cdr where))
-	     (newi (cond 
+	     (newi (cond
 		    ((eq prev-context 'list-end) previ)
 		    ((eq prev-context 'item-start) previ)
 		    ((eq prev-context 'list-start) (+ previ html-helper-basic-offset))
@@ -729,19 +729,19 @@ and `html-helper-never-indent'."
 		 (or (eq this-context 'item-start) (eq this-context 'item-end))
 		 (eq prev-context 'list-end))
 		(setq newi (- newi html-helper-item-continue-indent)))
-	       
+
 	       ;; end of list and last line was an end: go backwards twice
 	       ((and (eq this-context 'list-end) (eq prev-context 'list-end))
 		(setq newi (- newi html-helper-item-continue-indent html-helper-basic-offset)))
-	       
+
 	       ;; Any other end of list? Indent negative
 	       ((and (eq this-context 'list-end))
 		(setq newi (- newi html-helper-basic-offset)))
-	       
+
 	       ;; start of list and last line beginning of item, go forwards
 	       ((and (eq this-context 'list-start) (eq prev-context 'item-start))
 		(setq newi (+ newi html-helper-item-continue-indent)))))
-	  
+
 	  ;; default: no special case, indent forward for text
 	  (cond
 	   ;; last line an item? Beginning of continued item - go forward
@@ -750,12 +750,12 @@ and `html-helper-never-indent'."
 
 	(if html-helper-print-indent-info
 	    (message "Last Context: %s, This Context: %s, Previous: %s New: %s" prev-context this-context previ newi))
-	
+
 	;; just in case
 	(if (< newi 0)
 	    (setq newi 0))
 	(indent-to newi newi)
-	
+
 	;; adjust point to where it was before, or at start of indentation
 	(goto-char (marker-position m))
 	(if (< (current-column) (current-indentation))
@@ -845,7 +845,7 @@ Useful for adding timestamps to existing buffers."
 
 (defun html-helper-mode ()
   "Mode for editing HTML documents.
-For more documentation and the newest version, 
+For more documentation and the newest version,
 see http://www.santafe.edu/~nelson/tools/
 
 The main function html-helper-mode provides is a menu and keybindings
@@ -903,7 +903,7 @@ Written by nelson@santafe.edu, http://www.santafe.edu/~nelson/
 	indent-line-function 'html-helper-indent)
 
   (tempo-use-tag-list 'html-helper-tempo-tags html-helper-completion-finder)
-  
+
   (if html-helper-do-write-file-hooks
       (add-hook 'local-write-file-hooks 'html-helper-update-timestamp))
 
