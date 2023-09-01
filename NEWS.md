@@ -3,6 +3,8 @@
 * Changed `font-lock-reference-face` to `font-lock-constant-face` to revive
   syntax highlighting in Emacs 29.1.
 
+* Removed XEmacs support.
+
 
 
 

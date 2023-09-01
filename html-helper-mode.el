@@ -759,22 +759,9 @@ Written by Nelson Minar
   (make-local-variable 'comment-start-skip)
   (make-local-variable 'indent-line-function)
 
-  ;; font-lock setup for various emacsen: XEmacs, Emacs 19.29+, Emacs <19.29.
-  ;; By Ulrik Dickow <dickow@nbi.dk>.
-  (cond ((string-match "XEmacs\\|Lucid" (emacs-version)) ; XEmacs/Lucid
-         (put major-mode 'font-lock-keywords-case-fold-search t))
-        ;; XEmacs (19.13, at least) guesses the rest correctly.
-        ;; If any older XEmacsen don't, then tell me.
-        ((string-lessp "19.28.89" emacs-version) ; Emacs 19.29 and later
-         (make-local-variable 'font-lock-defaults)
-         (setq font-lock-defaults '(html-helper-font-lock-keywords t t)))
-        (t ; Emacs 19.28 and older
-         (make-local-variable 'font-lock-keywords-case-fold-search)
-         (make-local-variable 'font-lock-keywords)
-         (make-local-variable 'font-lock-no-comments)
-         (setq font-lock-keywords-case-fold-search t)
-         (setq font-lock-keywords html-helper-font-lock-keywords)
-         (setq font-lock-no-comments t)))
+  ;; font-lock setup, by Ulrik Dickow
+  (make-local-variable 'font-lock-defaults)
+  (setq font-lock-defaults '(html-helper-font-lock-keywords t t))
 
   (setq comment-start "<!-- "
         comment-end " -->"
@@ -798,53 +785,14 @@ Written by Nelson Minar
 
 ;; 16 Patterns for font-lock
 
-;; By Ulrik Dickow <dickow@nbi.dk>.
-;; Originally aimed at Emacs 19.29. Later on disabled syntactic fontification
-;; and reordered regexps completely, to be compatible with XEmacs (it doesn't
-;; understand OVERRIDE=`keep').
-;; We make an effort on handling nested tags intelligently.
-;; font-lock compatibility with XEmacs/Lucid and older Emacsen (<19.29).
-
-(if (string-match "XEmacs\\|Lucid" (emacs-version))
-    ;; XEmacs/Lucid
-    ;; Make needed faces if the user hasn't already done so.
-    ;; Respect X resources (`make-face' uses them when they exist).
-    (let ((change-it
-           (function (lambda (face)
-                       (or (if (fboundp 'facep)
-                               (facep face)
-                             (memq face (face-list)))
-                           (make-face face))
-                       (not (face-differs-from-default-p face))))))
-      (if (funcall change-it 'html-helper-bold-face)
-          (copy-face 'bold 'html-helper-bold-face))
-      (if (funcall change-it 'html-helper-italic-face)
-          (copy-face 'italic 'html-helper-italic-face))
-      (if (funcall change-it 'html-helper-underline-face)
-          (set-face-underline-p 'html-helper-underline-face t))
-      (if (funcall change-it 'font-lock-variable-name-face)
-          (set-face-foreground 'font-lock-variable-name-face "salmon"))
-      (if (funcall change-it 'font-lock-constant-face)
-          (set-face-foreground 'font-lock-constant-face "violet")))
-
-  ;; Emacs (any version)
-  ;; Note that Emacs evaluates the face entries in `font-lock-keywords',
-  ;; while XEmacs doesn't. So XEmacs doesn't use the following *variables*,
-  ;; but instead the faces with the same names as the variables.
-  (defvar html-helper-bold-face 'bold
-    "Face used as bold. Typically `bold'.")
-  (defvar html-helper-italic-face 'italic
-    "Face used as italic. Typically `italic'.")
-  (defvar html-helper-underline-face 'underline
-    "Face used as underline. Typically `underline'.")
-  (if (string-lessp "19.28.89" emacs-version)
-      () ; Emacs 19.29 and later
-    ;; Emacs 19.28 and older
-    ;; Define face variables that don't exist until Emacs 19.29.
-    (defvar font-lock-variable-name-face 'font-lock-doc-string-face
-      "Face to use for variable names -- and some HTML keywords.")
-    (defvar font-lock-constant-face 'underline ; Ugly at line breaks
-      "Face to use for references -- including HTML hyperlink texts.")))
+;; By Ulrik Dickow
+;; We make an effort on handling nested tags intelligently
+(defvar html-helper-bold-face 'bold
+  "Face used as bold. Typically `bold'.")
+(defvar html-helper-italic-face 'italic
+  "Face used as italic. Typically `italic'.")
+(defvar html-helper-underline-face 'underline
+  "Face used as underline. Typically `underline'.")
 
 (defvar html-helper-font-lock-keywords
   (let (;; Titles and H1's, like function defs.
@@ -869,7 +817,7 @@ Written by Nelson Minar
                           "v\\([^a]\\|a[^r]\\)\\)\\)\\)"))
         (not-tend (concat "\\([^<]\\|<\\([^/]\\|/\\([^ht]\\|"
                           "h[^1]\\|t\\([^i]\\|i[^t]\\)\\)\\)\\)")))
-    (list ; Avoid use of `keep', since XEmacs will treat it the same as `t'.
+    (list
      ;; First fontify the text of a HREF anchor. It may be overridden later.
      ;; Anchors in headings will be made bold, for instance.
      '("<a\\s-+href[^>]*>\\([^>]+\\)</a>"
