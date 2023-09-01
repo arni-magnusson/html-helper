@@ -943,8 +943,6 @@ Written by Nelson Minar
   "Additional expressions to highlight in HTML helper mode.")
 
 (provide 'html-helper-mode)
-(provide 'html-mode) ; for 14 character filename
-(run-hooks 'html-load-hook)
 (run-hooks 'html-helper-load-hook)
 
 ;;; html-helper-mode.el ends here
