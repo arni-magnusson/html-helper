@@ -128,12 +128,6 @@ of the function `html-helper-insert-timestamp' if
 If you want to not install some type of tag, override this variable.
 Order is significant: menus go in this order.")
 
-(defvar html-helper-emacs18
-  (and (boundp 'emacs-version)
-       (or (and (boundp 'epoch::version) epoch::version)
-           (string-lessp emacs-version "19")))
-  "I'll do minimal emacs18 support, grumble.")
-
 ;; 3  Syntax table and abbrev table
 
 (defvar html-helper-mode-syntax-table nil
@@ -233,11 +227,7 @@ with `html-helper-add-type-to-alist'."
          (progn
            (set keymap nil)
            (define-prefix-command keymap)
-           (if html-helper-emacs18
-               (progn
-                 (set keymap (make-sparse-keymap))
-                 (define-key html-helper-mode-map key (eval keymap)))
-             (define-key html-helper-mode-map key keymap))))
+           (define-key html-helper-mode-map key keymap)))
     (and menu
          (progn
            (set menu nil)))))
@@ -681,26 +671,8 @@ and `html-helper-never-indent'."
 
 ;; 12 Completion finder for tempo
 
-(defvar html-helper-completion-finder
-  (if html-helper-emacs18
-      'html-helper-emacs18-completion-finder
-    "\\(\\(<\\|&\\).*\\)\\=")
+(defvar html-helper-completion-finder "\\(\\(<\\|&\\).*\\)\\="
   "Passed to tempo-use-tag-list, used to find tags to complete.")
-
-;; The regexp finds everything between the last < or & and point, which is good
-;; enough to match the tags HTML might complete. emacs18 doesn't have the \= for
-;; regexps, though, so we do something more hackish.
-
-(defun html-helper-emacs18-completion-finder ()
-  "Unfortunately emacs18 doesn't support \\= in regexps, so we do this hack.
-If you have problems with it, maybe you should upgrade to emacs19 :-)"
-  (let* ((where nil)
-         (s (buffer-substring
-             (point)
-             (setq where (save-excursion
-                           (re-search-backward "<\\|&" (min (point-min) 100) t)
-                           (point))))))
-    (cons s where)))
 
 ;; 13 Timestamps
 

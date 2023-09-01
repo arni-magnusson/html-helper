@@ -1,8 +1,10 @@
 # html-helper-mode 4.0.1 (2023-09-01)
 
-* Removed obsolete `hilit19` support
+* Removed obsolete `html-helper-emacs18` support.
 
-* Removed misleading `(provide 'html-mode)`.
+* Removed obsolete `hilit19` support.
+
+* Removed misleading `(provide 'html-mode)` feature.
 
 * Removed ambiguous `(run-hooks 'html-load-hook)`. Use `html-helper-load-hook`
   instead.
