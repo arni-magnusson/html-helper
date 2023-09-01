@@ -12,7 +12,7 @@
 
 ;;; Commentary:
 
-;; html-helper-mode makes it easier to write HTML documents. This mode
+;; `html-helper-mode' makes it easier to write HTML documents. This mode
 ;; handles inserting HTML codes in a variety of ways (keybindings, menus,
 ;; completion in the buffer). It also supports indentation, timestamps,
 ;; skeletons for new documents, hilit19 patterns, and a variety of other
@@ -22,13 +22,13 @@
 ;;
 ;; Add this line in your .emacs:
 ;;   (autoload 'html-helper-mode "html-helper-mode" "Yay HTML" t)
-;; To invoke html-helper-mode automatically on .html files, do this:
+;; To invoke `html-helper-mode' automatically on .html files, do this:
 ;;   (setq auto-mode-alist (cons '("\\.html$" . html-helper-mode) auto-mode-alist))
 ;;
 ;; Configuration:
 ;;
 ;; See the "user variables" section. There are variables you want to configure,
-;; particularly html-helper-address-string and html-helper-use-expert-menu.
+;; particularly `html-helper-address-string' and `html-helper-use-expert-menu'.
 
 ;; Thank yous:
 ;;
@@ -37,11 +37,11 @@
 ;; Marc Hedlund <march@europa.com> for general encouragement and many helpful
 ;;   suggestions, especially with HTML/2.0 compliance and form design.
 ;; Ulrik Dickow <dickow@nbi.dk> for the font-lock code.
-;; Denis Howe <dbh@doc.ic.ac.uk> for writing browse-url.
+;; Denis Howe <dbh@doc.ic.ac.uk> for adding browse-url support.
 ;; Magnus Homann <d0asta@dtek.chalmers.se> and Jamshid Afshar <jamshid@ses.com>
 ;;   for timestamp suggestions.
-;; Everyone who sent me a version of menus (16 in all!).
-;; Marc Andreessen <marca@mcom.com> for writing the original html-mode.
+;; Everyone who sent me a version of menus, 16 in all!
+;; Marc Andreessen <marca@mcom.com> for writing the original `html-mode'.
 
 ;;; Code:
 
@@ -84,10 +84,10 @@ Default is 4, the length of things like \"<li>\" and \"<dd>\".")
   "*If not nil, the indentation code for html-helper is turned off.")
 
 (defvar html-helper-mode-hook nil
-  "*Hook run when html-helper-mode is started.")
+  "*Hook run when `html-helper-mode' is started.")
 
 (defvar html-helper-load-hook nil
-  "*Hook run when html-helper-mode is loaded.")
+  "*Hook run when `html-helper-mode' is loaded.")
 
 (defvar html-helper-timestamp-hook 'html-helper-default-insert-timestamp
   "*Hook called for timestamp insertion.
@@ -125,7 +125,7 @@ of the function `html-helper-insert-timestamp' if
 
 (defvar html-helper-types-to-install
   '(anchor list header logical phys textel entity image head form)
-  "*List of tag types to install when html-helper-mode is first loaded.
+  "*List of tag types to install when `html-helper-mode' is first loaded.
 If you want to not install some type of tag, override this variable.
 Order is significant: menus go in this order.")
 
@@ -150,7 +150,7 @@ Order is significant: menus go in this order.")
   (modify-syntax-entry ?'  "w   " html-helper-mode-syntax-table))
 
 (defvar html-helper-mode-abbrev-table nil
-  "Abbrev table used while in html-helper-mode.")
+  "Abbrev table used while in `html-helper-mode'.")
 (define-abbrev-table 'html-helper-mode-abbrev-table ())
 
 ;; 4  Keymap and menu
@@ -224,7 +224,7 @@ There is no support for removing a type once it has been installed.")
 (defun html-helper-install-type (type)
   "Install a new tag type: add it to the keymap, menu structures, etc.
 For this to work, the type must first have been added to the list of types
-with html-helper-add-type-to-alist."
+with `html-helper-add-type-to-alist'."
   (setq html-helper-installed-types (cons type html-helper-installed-types))
   (let ((keymap (html-helper-keymap-for type))
         (key (html-helper-key-for type))
@@ -255,7 +255,7 @@ with html-helper-add-type-to-alist."
 
 ;; Extra commands that HTML helper supports that aren't insertions
 (defvar html-helper-mode-functions-map nil
-  "Keymap for extra HTML mode functions")
+  "Keymap for extra html-helper functions")
 (define-prefix-command 'html-helper-mode-functions-map)
 (define-key html-helper-mode-map "\C-c\C-z"
             'html-helper-mode-functions-map)
@@ -282,7 +282,7 @@ with html-helper-add-type-to-alist."
 (defun html-helper-string-to-symbol (input-string)
   "Given a string, downcase it and replace spaces with -.
 We use this to turn menu entries into good symbols for functions.
-It's not entirely successful, but fortunately emacs lisp is forgiving."
+It's not entirely successful, but fortunately Emacs Lisp is forgiving."
   (let* ((s (copy-sequence input-string))
          (l (1- (length s))))
     (while (> l 0)
@@ -485,7 +485,7 @@ If `html-helper-use-expert-menu' is nil, then just use a novice menu."
           (> (prefix-numeric-value arg) 0)))
   (html-helper-rebuild-menu))
 
-;; If browse-url loaded, add this in the novice menu
+;; If `browse-url-of-file' loaded, add this in the novice menu
 (if (fboundp 'browse-url-of-file)
     (setq html-helper-novice-menu
           (append html-helper-novice-menu
@@ -508,7 +508,7 @@ This function can be called again, it redoes the entire menu."
   (setq html-helper-mode-menu
         (append html-helper-user-menu html-helper-mode-menu))
 
-  ;; Now cons in the browse-url functions
+  ;; Now cons in the `browse-url-of-file' functions
   (if (fboundp 'browse-url-of-file)
       (setq html-helper-mode-menu
             (cons '["Load this Buffer in Browser" browse-url-of-file t]
