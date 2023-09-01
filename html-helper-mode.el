@@ -60,7 +60,7 @@
 ;;   with the package or is at http://www.santafe.edu/~nelson/tools/
 
 ;; Thank yous:
-;;   David Kågedal <davidk@lysator.liu.se> for the tempo code which
+;;   David Kagedal <davidk@lysator.liu.se> for the tempo code which
 ;;     forms the core of the HTML insertion, as well as the HTML+ tags.
 ;;   Marc Hedlund <march@europa.com> for general encouragement and
 ;;     many helpful suggestions, especially with HTML/2.0 compliance
