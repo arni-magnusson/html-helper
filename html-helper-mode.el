@@ -9,7 +9,7 @@
 ;; Keywords:   languages
 ;; URL:        https://github.com/arni-magnusson/html-helper
 
-(defconst html-helper-mode-version "4.1.1" "HTML Helper Mode version number")
+(defconst html-helper-mode-version "4.2.0" "HTML Helper Mode version number")
 
 ;;; Commentary:
 
@@ -33,11 +33,12 @@
 ;; Acknowledgements:
 ;;
 ;; Ulrik Dickow <dickow@nbi.dk> for the font-lock code.
-;; Arni Magnusson <thisisarni@gmail.com> for adapting the 1998 code to Emacs 29.
+;; Arni Magnusson <thisisarni@gmail.com> for updating the 1998 code to modern
+;;   Emacs and HTML.
 ;; David Kagedal <davidk@lysator.liu.se> for the tempo code which forms the core
 ;;   of the HTML insertion, as well as the HTML+ tags.
 ;; Marc Hedlund <march@europa.com> for general encouragement and many helpful
-;;   suggestions, especially with HTML/2.0 compliance and form design.
+;;   suggestions, especially with HTML 2.0 compliance and form design.
 ;; Denis Howe <dbh@doc.ic.ac.uk> for adding browse-url support.
 ;; Magnus Homann <d0asta@dtek.chalmers.se> and Jamshid Afshar <jamshid@ses.com>
 ;;   for timestamp suggestions.
@@ -605,7 +606,8 @@ This function can be called again, it redoes the entire menu."
 ;; structure too, so indentation works. This is a bit weird, but it's ok.
 
 (defvar html-helper-any-list-item-start
-  "<li>\\|<dt>\\|<dd>\\|<option\\|<th>\\|<td>")
+  ;; Distinguish between <li> and <link>
+  "<li[ >]\\|<dt\\|<dd\\|<option\\|<th\\|<td\\|<thead\\|<tbody")
 (defvar html-helper-any-list-item-end "</li>\\|</dt>\\|</dd>\\|</th>\\|</td>")
 (defvar html-helper-any-list-start
   "<dl>\\|<ul>\\|<ol>\\|<menu>\\|<dir>\\|<select\\|<table\\|<tr>")

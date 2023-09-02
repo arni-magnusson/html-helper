@@ -1,3 +1,11 @@
+# html-helper-mode 4.2.0 (2023-09-03)
+
+* Improved indentation when tags <li>, <dt>, <dd>, <th>, and <td> have
+  attributes. Added indentation support for tags <thead> and <tbody>.
+
+
+
+
 # html-helper-mode 4.1.1 (2023-09-01)
 
 * Formatted code to 80 cols.
