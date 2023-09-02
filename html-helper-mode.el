@@ -900,41 +900,39 @@ Written by Nelson Minar.
     (list
      ;; First fontify the text of a HREF anchor, it may be overridden later
      ;; Anchors in headings will be made bold, for instance
-     '("<a\\s-+href[^>]*>\\([^>]+\\)</a>"
-       1 font-lock-constant-face t)
+     '("<a\\s-+href[^>]*>\\([^>]+\\)</a>" 1 font-lock-constant-face t)
      ;; Tag pairs like <b>...</b> etc
      ;; Cunning repeated fontification to handle common cases of overlap
      ;; Bold complex --- possibly with arbitrary other non-bold stuff inside
-     (list (concat "<" bword ">\\(" not-bend "*\\)</\\1>")
-           3 'html-helper-bold-face t)
+     (list (concat "<" bword ">\\(" not-bend "*\\)</\\1>") 3
+           'html-helper-bold-face t)
      ;; Italic complex --- possibly with arbitrary non-italic kept inside
-     (list (concat "<" iword ">\\(" not-iend "*\\)</\\1>")
-           3 'html-helper-italic-face t)
+     (list (concat "<" iword ">\\(" not-iend "*\\)</\\1>") 3
+           'html-helper-italic-face t)
      ;; Bold simple --- first fontify bold regions with no tags inside
-     (list (concat "<" bword ">\\(" "[^<]" "*\\)</\\1>")
-           3 'html-helper-bold-face t)
+     (list (concat "<" bword ">\\(" "[^<]" "*\\)</\\1>") 3
+           'html-helper-bold-face t)
      ;; Any tag, general rule, just after bold/italic stuff
      '("\\(<[^>]*>\\)" 1 font-lock-type-face t)
      ;; Titles and level 1 headings (anchors do sometimes appear in h1's)
-     (list (concat "<" tword ">\\(" not-tend "*\\)</\\1>")
-           3 'font-lock-function-name-face t)
+     (list (concat "<" tword ">\\(" not-tend "*\\)</\\1>") 3
+           'font-lock-function-name-face t)
      ;; Underline is rarely used. Only handle it when no tags inside
      '("<u>\\([^<]*\\)</u>" 1 html-helper-underline-face t)
      ;; Forms, anchors & images (also fontify strings inside)
-     '("<\\(form\\|i\\(mg\\|nput\\)\\)\\>[^>]*>"
-       0 font-lock-variable-name-face t)
+     '("<\\(form\\|i\\(mg\\|nput\\)\\)\\>[^>]*>" 0
+       font-lock-variable-name-face t)
      '("</a>" 0 font-lock-keyword-face t)
      '("<a\\b[^>]*>" 0 font-lock-keyword-face t)
      '("=[ \t\n]*\\(\"[^\"]+\"\\)" 1 font-lock-string-face t)
      ;; Large-scale structure keywords (like "program" in Fortran)
      ;; "<html>" "</html>" "<body>" "</body>" "<head>" "</head>" "</form>"
-     '("</?\\(body\\|form\\|h\\(ead\\|tml\\)\\)>"
-       0 font-lock-variable-name-face t)
+     '("</?\\(body\\|form\\|h\\(ead\\|tml\\)\\)>" 0
+       font-lock-variable-name-face t)
      ;; HTML special characters
      '("&[^;\n]*;" 0 font-lock-string-face t)
      ;; SGML things like <!DOCTYPE ...> with possible <!ENTITY...> inside
-     '("<![a-z]+\\>[^<>]*\\(<[^>]*>[^<>]*\\)*>"
-       0 font-lock-comment-face t)
+     '("<![a-z]+\\>[^<>]*\\(<[^>]*>[^<>]*\\)*>" 0 font-lock-comment-face t)
      ;; Comment declarations according to the HTML 2.0 spec at
      ;; <URL:http://www.w3.org/pub/WWW/MarkUp/html-spec/html-spec_3.html>
      ;; Usually `<!-- ... -->', but also e.g the single, complete declaration
