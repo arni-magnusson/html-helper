@@ -875,8 +875,7 @@ Written by Nelson Minar.
   "Face used as underline. Typically `underline'.")
 
 (defvar html-helper-font-lock-keywords
-  (let (;; Titles and H1's, like function defs
-        ;; Names of tags to boldify
+  (let (;; Names of tags to boldify
         (bword "\\(b\\|title\\|h[1-4]\\|strong\\)\\([ \t\n]+[^>]+\\)?")
         ;; Names of tags to italify
         (iword "\\(address\\|cite\\|em\\|i\\|var\\)\\([ \t\n]+[^>pa]+\\)?")
@@ -900,7 +899,7 @@ Written by Nelson Minar.
      ;; First fontify the text of a HREF anchor, it may be overridden later
      ;; Anchors in headings will be made bold, for instance
      '("<a\\s-+href[^>]*>\\([^>]+\\)</a>" 1 font-lock-constant-face t)
-     ;; Tag pairs like <b>...</b> etc
+     ;; Tag pairs like <b>...</b>
      ;; Cunning repeated fontification to handle common cases of overlap
      ;; Bold complex --- possibly with arbitrary other non-bold stuff inside
      (list (concat "<" bword ">\\(" not-bend "*\\)</\\1>") 3
@@ -913,13 +912,13 @@ Written by Nelson Minar.
            'html-helper-bold-face t)
      ;; Any tag, general rule, just after bold/italic stuff
      '("\\(<[^>]*>\\)" 1 font-lock-type-face t)
-     ;; Underline is rarely used. Only handle it when no tags inside
+     ;; Underline is rarely used, only handle it when no tags inside
      '("<u>\\([^<]*\\)</u>" 1 html-helper-underline-face t)
      '("</a>" 0 font-lock-keyword-face t)
      '("<a\\b[^>]*>" 0 font-lock-keyword-face t)
      '("=[ \t\n]*\\(\"[^\"]+\"\\)" 1 font-lock-string-face t)
-     ;; Large-scale structure keywords (like "program" in Fortran)
-     ;; "<html>" "</html>" "<body>" "</body>" "<head>" "</head>" "</form>"
+     ;; Large-scale structure keywords
+     ;; "<html>" "<body>" "<head>" "<form>"
      '("</?\\(body\\|form\\|h\\(ead\\|tml\\)\\)>" 0
        font-lock-variable-name-face t)
      ;; HTML special characters
@@ -927,10 +926,9 @@ Written by Nelson Minar.
      ;; SGML things like <!DOCTYPE ...> with possible <!ENTITY...> inside
      '("<![a-z]+\\>[^<>]*\\(<[^>]*>[^<>]*\\)*>" 0 font-lock-comment-face t)
      ;; Comment declarations according to the HTML 2.0 spec at
-     ;; <URL:http://www.w3.org/pub/WWW/MarkUp/html-spec/html-spec_3.html>
-     ;; Usually `<!-- ... -->', but also e.g the single, complete declaration
-     ;; `<!--c1--  -- c2 -- -->c3 (still comment) ----c4- c4--   >'
-     ;; Note that e.g. Netscape 3.01 Gold doesn't fully live up to the spec
+     ;; https://www.w3.org/MarkUp/html-spec/html-spec_3.html
+     ;; Usually <!-- ... -->, but also the single, complete declaration
+     ;; <!--c1--  -- c2 -- -->c3 (still comment) ----c4- c4--   >
      '("<!\\(--\\([^-]\\|-[^-]\\)*--\\s-*\\)*>" 0 font-lock-comment-face t)))
   "Additional expressions to highlight in HTML helper mode.")
 
