@@ -608,7 +608,8 @@ This function can be called again, it redoes the entire menu."
 (defvar html-helper-any-list-item-start
   ;; Distinguish between <li> and <link>
   "<li[ >]\\|<dt\\|<dd\\|<option\\|<th\\|<td\\|<thead\\|<tbody")
-(defvar html-helper-any-list-item-end "</li>\\|</dt>\\|</dd>\\|</th>\\|</td>")
+(defvar html-helper-any-list-item-end
+  "</li>\\|</dt>\\|</dd>\\|</th>\\|</td>\\|</thead>\\|</tbody>")
 (defvar html-helper-any-list-start
   "<dl>\\|<ul>\\|<ol>\\|<menu>\\|<dir>\\|<select\\|<table\\|<tr>")
 (defvar html-helper-any-list-end
