@@ -915,9 +915,6 @@ Written by Nelson Minar.
      '("\\(<[^>]*>\\)" 1 font-lock-type-face t)
      ;; Underline is rarely used. Only handle it when no tags inside
      '("<u>\\([^<]*\\)</u>" 1 html-helper-underline-face t)
-     ;; Forms, anchors & images (also fontify strings inside)
-     '("<\\(form\\|i\\(mg\\|nput\\)\\)\\>[^>]*>" 0
-       font-lock-variable-name-face t)
      '("</a>" 0 font-lock-keyword-face t)
      '("<a\\b[^>]*>" 0 font-lock-keyword-face t)
      '("=[ \t\n]*\\(\"[^\"]+\"\\)" 1 font-lock-string-face t)

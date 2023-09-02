@@ -1,15 +1,19 @@
 # html-helper-mode 4.2.0 (2023-09-03)
 
-* Improved indentation when tags <li>, <dt>, <dd>, <th>, and <td> have
-  attributes. Added indentation support for tags <thead> and <tbody>.
+* Improved indentation when tags `<li>`, `<dt>`, `<dd>`, `<th>`, and `<td>` have
+  attributes. Added indentation support for tags `<thead>` and `<tbody>`.
 
-* Improved indentation when tags <dl>, <ul>, <ol>, <menu>, <dir>, and <tr> have
-  attributes. Added indentation support for tags <form>, <style>, and <div>.
+* Improved indentation when tags `<dl>`, `<ul>`, `<ol>`, `<menu>`, `<dir>`, and
+  `<tr>` have attributes. Added indentation support for tags `<form>`,
+  `<style>`, and `<div>`.
 
-* Added indentation support for curly braces {}.
+* Added indentation support for curly braces `{}`.
 
-* Changed syntax highlighting of <title> and <h1> entries to be the same as
-  <h2>, <h3>, and <h4>.
+* Changed syntax highlighting of `<title>` and `<h1>` entries to be the same as
+  `<h2>`, `<h3>`, and `<h4>`.
+
+* Changed syntax highlighting of `<form>`, `<img>`, and `<input>` to be as
+  generic tags.
 
 
 
