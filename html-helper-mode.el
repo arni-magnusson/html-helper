@@ -611,16 +611,17 @@ This function can be called again, it redoes the entire menu."
 (defvar html-helper-any-list-item-end
   "</li>\\|</dt>\\|</dd>\\|</th>\\|</td>\\|</thead>\\|</tbody>")
 (defvar html-helper-any-list-start
-  "<dl>\\|<ul>\\|<ol>\\|<menu>\\|<dir>\\|<select\\|<table\\|<tr>")
+  "<dl\\|<ul\\|<ol\\|<menu\\|<dir\\|<form\\|<select\\|<table\\|<tr\\|<style\\|\
+<div\\|{")
 (defvar html-helper-any-list-end
-  "</dl>\\|</ul>\\|</ol>\\|</menu>\\|</dir>\\|</select>\\|</table>\\|</tr>")
+  "</dl>\\|</ul>\\|</ol>\\|</menu>\\|</dir>\\|</form>\\|</select>\\|</table>\\|\
+</tr>\\|</style>\\|</div>\\|}")
 (defvar html-helper-any-list
   (format "\\(%s\\)\\|\\(%s\\)\\|\\(%s\\)\\|\\(%s\\)"
           html-helper-any-list-start
           html-helper-any-list-end
           html-helper-any-list-item-start
           html-helper-any-list-item-end))
-
 (defvar html-helper-indentation-list
   (format "\\(%s\\)\\|\\(%s\\)\\|\\(%s\\)"
           html-helper-any-list-start

@@ -3,7 +3,10 @@
 * Improved indentation when tags <li>, <dt>, <dd>, <th>, and <td> have
   attributes. Added indentation support for tags <thead> and <tbody>.
 
+* Improved indentation when tags <dl>, <ul>, <ol>, <menu>, <dir>, and <tr> have
+  attributes. Added indentation support for tags <form>, <style>, and <div>.
 
+* Added indentation support for curly braces {}.
 
 
 # html-helper-mode 4.1.1 (2023-09-01)
