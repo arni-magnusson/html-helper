@@ -8,6 +8,11 @@
 
 * Added indentation support for curly braces {}.
 
+* Changed syntax highlighting of <title> and <h1> entries to be the same as
+  <h2>, <h3>, and <h4>.
+
+
+
 
 # html-helper-mode 4.1.1 (2023-09-01)
 

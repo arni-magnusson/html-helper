@@ -876,18 +876,17 @@ Written by Nelson Minar.
 
 (defvar html-helper-font-lock-keywords
   (let (;; Titles and H1's, like function defs
-        ;; We allow for HTML 3.0 attributes, like `<h1 align=center>'
-        (tword "\\(h1\\|title\\)\\([ \t\n]+[^>]+\\)?")
         ;; Names of tags to boldify
-        (bword "\\(b\\|h[2-4]\\|strong\\)\\([ \t\n]+[^>]+\\)?")
+        (bword "\\(b\\|title\\|h[1-4]\\|strong\\)\\([ \t\n]+[^>]+\\)?")
         ;; Names of tags to italify
-        (iword "\\(address\\|cite\\|em\\|i\\|var\\)\\([ \t\n]+[^>]+\\)?")
+        (iword "\\(address\\|cite\\|em\\|i\\|var\\)\\([ \t\n]+[^>pa]+\\)?")
         ;; Regexp to match shortest sequence that surely isn't a bold end
         ;; We simplify a bit by extending "</strong>" to "</str.*"
         ;; Do similarly for non-italic and non-title ends
         (not-bend (concat "\\([^<]\\|<\\([^/]\\|/\\([^bhs]\\|"
                           "b[^>]\\|"
-                          "h\\([^2-4]\\|[2-4][^>]\\)\\|"
+                          "title[^>]\\|"
+                          "h\\([^1-4]\\|[1-4][^>]\\)\\|"
                           "s\\([^t]\\|t[^r]\\)\\)\\)\\)"))
         (not-iend (concat "\\([^<]\\|<\\([^/]\\|/\\([^aceiv]\\|"
                           "a\\([^d]\\|d[^d]\\)\\|"
@@ -910,13 +909,10 @@ Written by Nelson Minar.
      (list (concat "<" iword ">\\(" not-iend "*\\)</\\1>") 3
            'html-helper-italic-face t)
      ;; Bold simple --- first fontify bold regions with no tags inside
-     (list (concat "<" bword ">\\(" "[^<]" "*\\)</\\1>") 3
+     (list (concat "<" bword ">\\("  "[^<]"  "*\\)</\\1>") 3
            'html-helper-bold-face t)
      ;; Any tag, general rule, just after bold/italic stuff
      '("\\(<[^>]*>\\)" 1 font-lock-type-face t)
-     ;; Titles and level 1 headings (anchors do sometimes appear in h1's)
-     (list (concat "<" tword ">\\(" not-tend "*\\)</\\1>") 3
-           'font-lock-function-name-face t)
      ;; Underline is rarely used. Only handle it when no tags inside
      '("<u>\\([^<]*\\)</u>" 1 html-helper-underline-face t)
      ;; Forms, anchors & images (also fontify strings inside)
