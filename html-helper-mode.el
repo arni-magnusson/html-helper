@@ -925,6 +925,8 @@ Written by Nelson Minar.
      '("&[^;\n]*;" 0 font-lock-string-face t)
      ;; SGML things like <!DOCTYPE ...> with possible <!ENTITY...> inside
      '("<![a-z]+\\>[^<>]*\\(<[^>]*>[^<>]*\\)*>" 0 font-lock-comment-face t)
+     ;; /* CSS comments */
+     '("/\\*.*\\*/" 0 font-lock-comment-face t)
      ;; Comment declarations according to the HTML 2.0 spec at
      ;; https://www.w3.org/MarkUp/html-spec/html-spec_3.html
      ;; Usually <!-- ... -->, but also the single, complete declaration

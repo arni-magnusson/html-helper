@@ -9,6 +9,8 @@
 
 * Added indentation support for curly braces `{}`.
 
+* Added syntax highlighting of `/*` CSS comments `*/`.
+
 * Changed syntax highlighting of `<title>` and `<h1>` entries to be the same as
   `<h2>`, `<h3>`, and `<h4>`.
 
