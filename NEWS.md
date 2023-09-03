@@ -9,6 +9,8 @@
 
 * Added indentation support for curly braces `{}`.
 
+* Changed default `html-helper-item-continue-indent` to 2.
+
 * Added syntax highlighting of `/*` CSS comments `*/`.
 
 * Changed syntax highlighting of `<title>` and `<h1>` entries to be the same as

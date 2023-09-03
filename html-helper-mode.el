@@ -79,9 +79,8 @@ list of vectors or lists which themselves are vectors (for submenus).")
 (defvar html-helper-basic-offset 2
   "*Basic indentation size used for list indentation")
 
-(defvar html-helper-item-continue-indent 4
-  "*Indentation of lines that follow a <li> item.
-Default is 4, the length of things like \"<li>\" and \"<dd>\".")
+(defvar html-helper-item-continue-indent 2
+  "*Indentation of lines that follow a <li> item.")
 
 (defvar html-helper-never-indent nil
   "*If not nil, the indentation code for html-helper is turned off.")
