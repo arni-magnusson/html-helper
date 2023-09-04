@@ -9,14 +9,14 @@
 ;; Keywords:   languages
 ;; URL:        https://github.com/arni-magnusson/html-helper
 
-(defconst html-helper-mode-version "4.2.0" "HTML Helper Mode version number.")
+(defconst html-helper-mode-version "4.3.0" "HTML Helper Mode version number.")
 
 ;;; Commentary:
 
 ;; `html-helper-mode' makes it easier to write HTML documents. This mode
 ;; handles inserting HTML codes in a variety of ways (keybindings, menus,
-;; completion in the buffer). It also supports indentation, timestamps,
-;; skeletons for new documents, and a variety of other things.
+;; completion in the buffer). It also supports indentation, skeletons for new
+;; documents, and a variety of other things.
 ;;
 ;; Installation:
 ;;
@@ -40,8 +40,6 @@
 ;; Marc Hedlund <march@europa.com> for general encouragement and many helpful
 ;;   suggestions, especially with HTML 2.0 compliance and form design.
 ;; Denis Howe <dbh@doc.ic.ac.uk> for adding browse-url support.
-;; Magnus Homann <d0asta@dtek.chalmers.se> and Jamshid Afshar <jamshid@ses.com>
-;;   for timestamp suggestions.
 ;; Everyone who submitted a version of menus, 16 in all!
 ;; Marc Andreessen <marca@mcom.com> for writing the original `html-mode'.
 
@@ -59,9 +57,6 @@
 
 (defvar html-helper-use-expert-menu nil
   "*If not nil, then use the full HTML menu.")
-
-(defvar html-helper-do-write-file-hooks t
-  "*If not nil, then modify `local-write-file-hooks' to do timestamps.")
 
 (defvar html-helper-build-new-buffer t
   "*If not nil, then insert `html-helper-new-buffer-strings' for new buffers.")
@@ -91,10 +86,6 @@ list of vectors or lists which themselves are vectors (for submenus).")
 (defvar html-helper-load-hook nil
   "*Hook run when `html-helper-mode' is loaded.")
 
-(defvar html-helper-timestamp-hook 'html-helper-default-insert-timestamp
-  "*Hook called for timestamp insertion.
-Override this for your own timestamp styles.")
-
 (defvar html-helper-new-buffer-template
   '(html-helper-htmldtd-version
     "<html> <head>\n"
@@ -104,26 +95,10 @@ Override this for your own timestamp styles.")
     p
     "\n\n<hr>\n"
     "<address>" html-helper-address-string "</address>\n"
-    html-helper-timestamp-start
-    html-helper-timestamp-end
     "\n</body> </html>\n")
   "*Template for new buffers.
 Inserted by `html-helper-insert-new-buffer-strings' if
 `html-helper-build-new-buffer' is set to t")
-
-(defvar html-helper-timestamp-start "<!-- hhmts start -->\n"
-  "*Start delimiter for timestamps.
-Everything between `html-helper-timestamp-start' and
-`html-helper-timestamp-end' will be deleted and replaced with the output
-of the functions `html-helper-timestamp-hook' if
-`html-helper-do-write-file-hooks' is t")
-
-(defvar html-helper-timestamp-end "<!-- hhmts end -->"
-  "*End delimiter for timestamps.
-Everything between `html-helper-timestamp-start' and
-`html-helper-timestamp-end' will be deleted and replaced with the output
-of the function `html-helper-insert-timestamp' if
-`html-helper-do-write-file-hooks' is t")
 
 (defvar html-helper-types-to-install
   '(anchor list header logical phys textel entity image head form)
@@ -270,8 +245,6 @@ with `html-helper-add-type-to-alist'."
 (define-prefix-command 'html-helper-mode-functions-map)
 (define-key html-helper-mode-map "\C-c\C-z"
             'html-helper-mode-functions-map)
-(define-key html-helper-mode-functions-map "t"
-            'html-helper-insert-timestamp-delimiter-at-point)
 
 ;; Indentation keys - only rebind these if the user wants indentation
 (if html-helper-never-indent
@@ -577,12 +550,6 @@ This function can be called again, it redoes the entire menu."
             (cons (vector "Browse URL at point" browse-url-browser-function t)
                   html-helper-mode-menu)))
 
-  ;; Cons in the timestamp delimiters
-  (setq html-helper-mode-menu
-        (cons '["Insert Timestamp Delimiter"
-                html-helper-insert-timestamp-delimiter-at-point t]
-              html-helper-mode-menu))
-
   ;; Now cons up the main menu out of the submenus
   (mapcar
    (function (lambda (type)
@@ -756,47 +723,7 @@ and `html-helper-never-indent'."
 (defvar html-helper-completion-finder "\\(\\(<\\|&\\).*\\)\\="
   "Passed to `tempo-use-tag-list', used to find tags to complete.")
 
-;; 13 Timestamps
-
-(defun html-helper-update-timestamp ()
-  "Basic function for updating timestamps.
-It finds the timestamp in the buffer by looking for
-`html-helper-timestamp-start', deletes all text up to
-`html-helper-timestamp-end', and runs `html-helper-timestamp-hook' which
-will should insert an appropriate timestamp in the buffer."
-  (save-excursion
-    (goto-char (point-max))
-    (if (not (search-backward html-helper-timestamp-start nil t))
-        (message "Timestamp delimiter start was not found")
-      (let ((ts-start (+ (point) (length html-helper-timestamp-start)))
-            (ts-end (if (search-forward html-helper-timestamp-end nil t)
-                        (- (point) (length html-helper-timestamp-end))
-                      nil)))
-        (if (not ts-end)
-            (message "Timestamp delimiter end was not found")
-          (delete-region ts-start ts-end)
-          (goto-char ts-start)
-          (run-hooks 'html-helper-timestamp-hook)))))
-  nil)
-
-(defun html-helper-default-insert-timestamp ()
-  "Default timestamp insertion function."
-  (let ((time (current-time-string)))
-    (insert "Last modified: "
-            (substring time 0 20)
-            (nth 1 (current-time-zone))
-            " "
-            (substring time -4)
-            "\n")))
-
-(defun html-helper-insert-timestamp-delimiter-at-point ()
-  "Insert timestamp delimiters at point.
-Useful for adding timestamps to existing buffers."
-  (interactive)
-  (insert html-helper-timestamp-start)
-  (insert html-helper-timestamp-end))
-
-;; 14 Insert new buffer strings
+;; 13 Insert new buffer strings
 
 (tempo-define-template "html-skeleton" html-helper-new-buffer-template
                        nil
@@ -806,7 +733,7 @@ Useful for adding timestamps to existing buffers."
   "Insert `html-helper-new-buffer-strings'."
   (tempo-template-html-skeleton))
 
-;; 15 Main function
+;; 14 Main function
 
 (defun html-helper-mode ()
   "Mode for editing HTML documents.
@@ -818,8 +745,8 @@ corresponding tag and places point in the right place. If a prefix
 argument is supplied, the tags is instead wrapped around the region.
 Alternately, one can type in part of the tag and complete it with M-TAB.
 
-There is also code for indentation, timestamps, skeletons for new
-documents, and lots of other neat features.
+There is also code for indentation, skeletons for new documents, and lots of
+other neat features.
 
 \\{html-helper-mode-map}
 Written by Nelson Minar."
@@ -839,7 +766,6 @@ Written by Nelson Minar."
   (make-local-variable 'comment-start-skip)
   (make-local-variable 'indent-line-function)
 
-  ;; font-lock setup, by Ulrik Dickow
   (make-local-variable 'font-lock-defaults)
   (setq font-lock-defaults '(html-helper-font-lock-keywords t t))
 
@@ -851,9 +777,6 @@ Written by Nelson Minar."
 
   (tempo-use-tag-list 'html-helper-tempo-tags html-helper-completion-finder)
 
-  (if html-helper-do-write-file-hooks
-      (add-hook 'local-write-file-hooks 'html-helper-update-timestamp))
-
   (if (and html-helper-build-new-buffer (zerop (buffer-size)))
       (html-helper-insert-new-buffer-strings))
 
@@ -863,9 +786,8 @@ Written by Nelson Minar."
   (run-hooks 'html-mode-hook)
   (run-hooks 'html-helper-mode-hook))
 
-;; 16 Patterns for font-lock
+;; 15 Patterns for font-lock
 
-;; By Ulrik Dickow
 ;; We make an effort on handling nested tags intelligently
 (defvar html-helper-bold-face 'bold
   "Face used as bold. Typically `bold'.")

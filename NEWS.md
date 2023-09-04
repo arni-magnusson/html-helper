@@ -1,3 +1,10 @@
+# html-helper-mode 4.3.0 (2023-09-05)
+
+* Removed archaic timestamp utilities.
+
+
+
+
 # html-helper-mode 4.2.0 (2023-09-05)
 
 * Improved indentation when tags `<li>`, `<dt>`, `<dd>`, `<th>`, and `<td>` have
