@@ -1,5 +1,8 @@
 # html-helper-mode 4.3.0 (2023-09-05)
 
+* Improved the indentation engine so it indicates that the buffer has not been
+  modified, if that is the case.
+
 * Removed keybindings that were violating Emacs major mode conventions.
 
 * Removed archaic timestamp utilities.
