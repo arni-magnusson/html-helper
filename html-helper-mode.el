@@ -626,7 +626,8 @@ This function can be called again, it redoes the entire menu."
           html-helper-any-list-start
           html-helper-any-list-end
           html-helper-any-list-item-start))
-(defvar html-helper-search-limit 2000 "Limit on how far back we search.")
+(defvar html-helper-search-limit 20000
+  "Limit on how far back we search.")
 
 (defun html-helper-context-symbol ()
   "Return the symbol the last match (against `html-helper-any-list') found."

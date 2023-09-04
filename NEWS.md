@@ -11,6 +11,8 @@
 
 * Changed default `html-helper-item-continue-indent` to 2.
 
+* Changed default `html-helper-search-limit` to 20000.
+
 * Added syntax highlighting of `/*` CSS comments `*/`.
 
 * Changed syntax highlighting of `<title>` and `<h1>` entries to be the same as
