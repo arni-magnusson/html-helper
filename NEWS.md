@@ -7,6 +7,8 @@
 
 * Removed archaic timestamp utilities.
 
+* Removed alias `html-helper-add-cookie`.
+
 
 
 

@@ -303,9 +303,6 @@ appropriate keymap if a key is requested. Format:
                (cons (vector name command t) (eval menu))))
       )))
 
-;; Backwards compatability
-(fset 'html-helper-add-cookie 'html-helper-add-tag)
-
 ;; 7  HTML tags
 
 ;; Order here is significant: within a tag type, menus and mode help go in the
