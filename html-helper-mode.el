@@ -236,8 +236,7 @@ with `html-helper-add-type-to-alist'."
 (mapcar
  (function (lambda (l) (define-key html-helper-mode-map (car l) (nth 1 l))))
  '(("\M-\C-f" tempo-forward-mark)
-   ("\M-\C-b" tempo-backward-mark)
-   ("\M-\t"   tempo-complete-tag)))
+   ("\M-\C-b" tempo-backward-mark)))
 
 ;; Extra commands that HTML helper supports that aren't insertions
 (defvar html-helper-mode-functions-map nil

@@ -1,5 +1,7 @@
 # html-helper-mode 4.3.0 (2023-09-05)
 
+* Removed keybindings that were violating Emacs major mode conventions.
+
 * Removed archaic timestamp utilities.
 
 
