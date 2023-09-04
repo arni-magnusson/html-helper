@@ -312,15 +312,8 @@ appropriate keymap if a key is requested. Format:
  'html-helper-add-tag
  '(
    ;; Entities
-   (entity "\C-c#"  "&#"     "Ascii Code"        ("&#" (r "Ascii: ") ";"))
-   (entity "\C-c\"" "&quot;" "Quotation mark"    ("&quot;"))
-   (entity "\C-c$"  "&reg;"  "Registered"        ("&reg;"))
-   (entity "\C-c@"  "&copy;" "Copyright"         ("&copy;"))
-   (entity "\C-c-"  "&shy;"  "Soft Hyphen"       ("&shy;"))
-   (entity "\C-c "  "&nbsp;" "Nonbreaking Space" ("&nbsp;"))
-   (entity "\C-c&"  "&amp;"  "Ampersand"         ("&amp;"))
-   (entity "\C-c>"  "&gt;"   "Greater Than"      ("&gt;"))
-   (entity "\C-c<"  "&lt;"   "Less Than"         ("&lt;"))
+   (entity "\C-c>" "&gt;" "Greater than" ("&gt;"))
+   (entity "\C-c<" "&lt;" "Less than"    ("&lt;"))
 
    ;; Logical styles
    (logical "b" "<blockquote>" "Blockquote"
