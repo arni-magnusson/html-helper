@@ -5,7 +5,7 @@
 
 * Removed keybindings that were violating Emacs major mode conventions.
 
-* Removed support for obsolete tag `<dir>`.
+* Removed support for obsolete tags `<dir>` and `<menu>`.
 
 * Removed archaic timestamp utilities.
 

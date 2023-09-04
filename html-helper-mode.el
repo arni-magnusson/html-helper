@@ -381,8 +381,6 @@ appropriate keymap if a key is requested. Format:
          (& "<dt>" > (p "Term: ") "\n<dd>" > (r "Definition: ")))
    (list "l" "<li>" "List Item"
          (& "<li>" > (r "Item: ")))
-   (list "m" "<menu>" "Menu List"
-         (& "<menu>" > "\n<li>" > (r "Item: ") "\n</menu>" >))
    (list "o" "<ol>" "Ordered List"
          (& "<ol>" > "\n<li>" > (r "Item: ") "\n</ol>" >))
    (list "d" "<dl>" "Definition List"
@@ -448,7 +446,7 @@ appropriate keymap if a key is requested. Format:
     (if
         (save-excursion
           (re-search-backward
-           "<li>\\|<dt>\\|<ul>\\|<ol>\\|<dd>\\|<menu>\\|<dl>" nil t)
+           "<li>\\|<dt>\\|<ul>\\|<ol>\\|<dd>\\|<dl>" nil t)
           (looking-at "<dt>\\|<dl>\\|<dd>"))
         (tempo-template-html-definition-item arg)
       (tempo-template-html-list-item arg))))
@@ -564,11 +562,10 @@ This function can be called again, it redoes the entire menu."
 (defvar html-helper-any-list-item-end
   "</li>\\|</dt>\\|</dd>\\|</th>\\|</td>\\|</thead>\\|</tbody>")
 (defvar html-helper-any-list-start
-  "<dl\\|<ul\\|<ol\\|<menu\\|<form\\|<select\\|<table\\|<tr\\|<style\\|\
-<div\\|{")
+  "<dl\\|<ul\\|<ol\\|<form\\|<select\\|<table\\|<tr\\|<style\\|<div\\|{")
 (defvar html-helper-any-list-end
-  "</dl>\\|</ul>\\|</ol>\\|</menu>\\|</form>\\|</select>\\|</table>\\|\
-</tr>\\|</style>\\|</div>\\|}")
+  "</dl>\\|</ul>\\|</ol>\\|</form>\\|</select>\\|</table>\\|</tr>\\|</style>\\|\
+</div>\\|}")
 (defvar html-helper-any-list
   (format "\\(%s\\)\\|\\(%s\\)\\|\\(%s\\)\\|\\(%s\\)"
           html-helper-any-list-start
