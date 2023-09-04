@@ -111,15 +111,15 @@ Order is significant: menus go in this order.")
 (defvar html-helper-mode-syntax-table nil
   "Syntax table for html-helper.")
 
-(if html-helper-mode-syntax-table
-    ()
-  (setq html-helper-mode-syntax-table
-        (make-syntax-table text-mode-syntax-table))
-  (modify-syntax-entry ?<  "(>  " html-helper-mode-syntax-table)
-  (modify-syntax-entry ?>  ")<  " html-helper-mode-syntax-table)
-  (modify-syntax-entry ?\" ".   " html-helper-mode-syntax-table)
-  (modify-syntax-entry ?\\ ".   " html-helper-mode-syntax-table)
-  (modify-syntax-entry ?'  "w   " html-helper-mode-syntax-table))
+(if (not html-helper-mode-syntax-table)
+    (progn
+      (setq html-helper-mode-syntax-table
+            (make-syntax-table text-mode-syntax-table))
+      (modify-syntax-entry ?<  "(>  " html-helper-mode-syntax-table)
+      (modify-syntax-entry ?>  ")<  " html-helper-mode-syntax-table)
+      (modify-syntax-entry ?\" ".   " html-helper-mode-syntax-table)
+      (modify-syntax-entry ?\\ ".   " html-helper-mode-syntax-table)
+      (modify-syntax-entry ?'  "w   " html-helper-mode-syntax-table)))
 
 (defvar html-helper-mode-abbrev-table nil
   "Abbrev table used while in `html-helper-mode'.")
@@ -247,10 +247,10 @@ with `html-helper-add-type-to-alist'."
             'html-helper-mode-functions-map)
 
 ;; Indentation keys - only rebind these if the user wants indentation
-(if html-helper-never-indent
-    ()
-  (define-key html-helper-mode-map "\t" 'html-helper-indent-command)
-  (define-key html-helper-mode-map "\C-m" 'newline-and-indent))
+(if (not html-helper-never-indent)
+    (progn
+      (define-key html-helper-mode-map "\t"   'html-helper-indent-command)
+      (define-key html-helper-mode-map "\C-m" 'newline-and-indent      )))
 
 ;; Browse URL stuff
 (if (fboundp 'browse-url-of-file)
@@ -653,70 +653,73 @@ and `html-helper-never-indent'."
 
 (defun html-helper-indent ()
   "Indentation workhorse function."
-  (if html-helper-never-indent
-      ()
-    (let ((m (point-marker))
-          (bol (progn (beginning-of-line) (point))))
+  (if (not html-helper-never-indent)
+      (progn
+        (let ((m (point-marker))
+              (bol (progn (beginning-of-line) (point))))
 
-      ;; Unindent the line
-      (delete-region (point) (progn (back-to-indentation) (point)))
+          ;; Unindent the line
+          (delete-region (point) (progn (back-to-indentation) (point)))
 
-      (let* ((where (html-helper-guess-prev-context))
-             (prev-context (car where))
-             (this-context nil)
-             (previ (cdr where))
-             (newi (cond
-                    ((eq prev-context 'list-end) previ)
-                    ((eq prev-context 'item-start) previ)
-                    ((eq prev-context 'list-start)
-                     (+ previ html-helper-basic-offset))
-                    (t previ))))
+          (let* ((where (html-helper-guess-prev-context))
+                 (prev-context (car where))
+                 (this-context nil)
+                 (previ (cdr where))
+                 (newi (cond
+                        ((eq prev-context 'list-end) previ)
+                        ((eq prev-context 'item-start) previ)
+                        ((eq prev-context 'list-start)
+                         (+ previ html-helper-basic-offset))
+                        (t previ))))
 
-        ;; newi is set to the basic indentation, now adjust indentation
-        ;; based on what the current line is.
-        (if (looking-at html-helper-any-list)
-            (progn
-              (setq this-context (html-helper-context-symbol))
+            ;; newi is set to the basic indentation, now adjust indentation
+            ;; based on what the current line is.
+            (if (looking-at html-helper-any-list)
+                (progn
+                  (setq this-context (html-helper-context-symbol))
+                  (cond
+                   ;; Item start or end and last line was a list-end: go back
+                   ((and
+                     (or (eq this-context 'item-start)
+                         (eq this-context 'item-end))
+                     (eq prev-context 'list-end))
+                    (setq newi (- newi html-helper-item-continue-indent)))
+
+                   ;; End of list and last line was an end: go backwards twice
+                   ((and (eq this-context 'list-end)
+                         (eq prev-context 'list-end))
+                    (setq newi (- newi html-helper-item-continue-indent
+                                  html-helper-basic-offset)))
+
+                   ;; Any other end of list? Indent negative
+                   ((and (eq this-context 'list-end))
+                    (setq newi (- newi html-helper-basic-offset)))
+
+                   ;; Start of list and last line beginning of item, go forwards
+                   ((and (eq this-context 'list-start)
+                         (eq prev-context 'item-start))
+                    (setq newi (+ newi html-helper-item-continue-indent)))))
+
+              ;; Default: no special case, indent forward for text
               (cond
-               ;; Item start or end and last line was a list-end: go backwards
-               ((and
-                 (or (eq this-context 'item-start) (eq this-context 'item-end))
-                 (eq prev-context 'list-end))
-                (setq newi (- newi html-helper-item-continue-indent)))
-
-               ;; End of list and last line was an end: go backwards twice
-               ((and (eq this-context 'list-end) (eq prev-context 'list-end))
-                (setq newi (- newi html-helper-item-continue-indent
-                              html-helper-basic-offset)))
-
-               ;; Any other end of list? Indent negative
-               ((and (eq this-context 'list-end))
-                (setq newi (- newi html-helper-basic-offset)))
-
-               ;; Start of list and last line beginning of item, go forwards
-               ((and (eq this-context 'list-start)
-                     (eq prev-context 'item-start))
+               ;; Last line an item? Beginning of continued item - go forward
+               ((eq prev-context 'item-start)
                 (setq newi (+ newi html-helper-item-continue-indent)))))
 
-          ;; Default: no special case, indent forward for text
-          (cond
-           ;; Last line an item? Beginning of continued item - go forward
-           ((eq prev-context 'item-start)
-            (setq newi (+ newi html-helper-item-continue-indent)))))
+            (if html-helper-print-indent-info
+                (message
+                 "Last Context: %s, This Context: %s, Previous: %s New: %s"
+                 prev-context this-context previ newi))
 
-        (if html-helper-print-indent-info
-            (message "Last Context: %s, This Context: %s, Previous: %s New: %s"
-                     prev-context this-context previ newi))
+            ;; Just in case
+            (if (< newi 0)
+                (setq newi 0))
+            (indent-to newi newi)
 
-        ;; Just in case
-        (if (< newi 0)
-            (setq newi 0))
-        (indent-to newi newi)
-
-        ;; Adjust point to where it was before, or at start of indentation
-        (goto-char (marker-position m))
-        (if (< (current-column) (current-indentation))
-            (back-to-indentation))))))
+            ;; Adjust point to where it was before, or at start of indentation
+            (goto-char (marker-position m))
+            (if (< (current-column) (current-indentation))
+                (back-to-indentation)))))))
 
 ;; 12 Completion finder for tempo
 
