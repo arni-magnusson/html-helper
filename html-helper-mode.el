@@ -754,7 +754,7 @@ and `html-helper-never-indent'."
 ;; 12 Completion finder for tempo
 
 (defvar html-helper-completion-finder "\\(\\(<\\|&\\).*\\)\\="
-  "Passed to tempo-use-tag-list, used to find tags to complete.")
+  "Passed to `tempo-use-tag-list', used to find tags to complete.")
 
 ;; 13 Timestamps
 
@@ -767,13 +767,13 @@ will should insert an appropriate timestamp in the buffer."
   (save-excursion
     (goto-char (point-max))
     (if (not (search-backward html-helper-timestamp-start nil t))
-        (message "timestamp delimiter start was not found")
+        (message "Timestamp delimiter start was not found")
       (let ((ts-start (+ (point) (length html-helper-timestamp-start)))
             (ts-end (if (search-forward html-helper-timestamp-end nil t)
                         (- (point) (length html-helper-timestamp-end))
                       nil)))
         (if (not ts-end)
-            (message "timestamp delimiter end was not found")
+            (message "Timestamp delimiter end was not found")
           (delete-region ts-start ts-end)
           (goto-char ts-start)
           (run-hooks 'html-helper-timestamp-hook)))))
