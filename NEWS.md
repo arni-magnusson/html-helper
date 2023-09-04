@@ -1,4 +1,4 @@
-# html-helper-mode 4.2.0 (2023-09-03)
+# html-helper-mode 4.2.0 (2023-09-05)
 
 * Improved indentation when tags `<li>`, `<dt>`, `<dd>`, `<th>`, and `<td>` have
   attributes. Added indentation support for tags `<thead>` and `<tbody>`.
