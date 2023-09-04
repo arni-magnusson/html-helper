@@ -232,12 +232,6 @@ with `html-helper-add-type-to-alist'."
 ;; Install the default types
 (mapcar 'html-helper-install-type html-helper-types-to-install)
 
-;; Special mode keys
-(mapcar
- (function (lambda (l) (define-key html-helper-mode-map (car l) (nth 1 l))))
- '(("\M-\C-f" tempo-forward-mark)
-   ("\M-\C-b" tempo-backward-mark)))
-
 ;; Extra commands that HTML helper supports that aren't insertions
 (defvar html-helper-mode-functions-map nil
   "Keymap for extra html-helper functions.")
@@ -459,9 +453,9 @@ appropriate keymap if a key is requested. Format:
 
 ;; 9  Menu support
 
-;; Menus are built for easymenu. html-helper-add-tag builds submenus based on
+;; Menus are built for easy-menu. `html-helper-add-tag` builds submenus based on
 ;; tag type, the expert menu code lumps them together into one list and calls
-;; easy-menu-define.
+;; `easy-menu-define`.
 
 (defvar html-helper-novice-menu
   '("HTML"
