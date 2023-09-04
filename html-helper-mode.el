@@ -417,10 +417,6 @@ appropriate keymap if a key is requested. Format:
          ("<head>\n" "</head>\n"))
    (head "B" "<body>" "Body"
          ("<body>\n" "</body>\n"))
-   (head "i" "<isindex>" "Isindex"
-         ("<isindex>\n"))
-   (head "n" "<nextid>" "Nextid"
-         ("<nextid>\n"))
    (head "h" "<meta http-equiv=" "HTTP Equivalent"
          ("<meta http-equiv=\"" (p "Equivalent: ") "\" content=\""
           (r "Content: ") "\">\n"))
