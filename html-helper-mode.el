@@ -9,7 +9,7 @@
 ;; Keywords:   languages
 ;; URL:        https://github.com/arni-magnusson/html-helper
 
-(defconst html-helper-mode-version "4.2.0" "HTML Helper Mode version number")
+(defconst html-helper-mode-version "4.2.0" "HTML Helper Mode version number.")
 
 ;;; Commentary:
 
@@ -77,7 +77,7 @@ menu that is handed off to easymenu for definition. It should be a
 list of vectors or lists which themselves are vectors (for submenus).")
 
 (defvar html-helper-basic-offset 2
-  "*Basic indentation size used for list indentation")
+  "*Basic indentation size used for list indentation.")
 
 (defvar html-helper-item-continue-indent 2
   "*Indentation of lines that follow a <li> item.")
@@ -153,10 +153,10 @@ Order is significant: menus go in this order.")
 ;; 4  Keymap and menu
 
 (defvar html-helper-mode-map (make-sparse-keymap)
-  "Keymap for html-helper")
+  "Keymap for html-helper.")
 
 (defvar html-helper-mode-menu nil
-  "Menu for html-helper. Clobbered and rebuilt by `html-helper-install-menu'")
+  "Menu for html-helper. Clobbered and rebuilt by `html-helper-install-menu'.")
 
 ;; html-helper-mode has a concept of "type" of tags. Each type is a list of tags
 ;; that all go together in one keymap and one menu. Types can be added to the
@@ -172,19 +172,19 @@ Order is significant: menus go in this order.")
 Add to this with `html-helper-add-type-to-alist'.")
 
 (defun html-helper-keymap-for (type)
-  "Accessor function for alist: for type, return keymap or nil"
+  "Accessor function for alist: for TYPE, return keymap or nil."
   (nth 0 (cdr-safe (assq type html-helper-type-alist))))
 
 (defun html-helper-key-for (type)
-  "Accessor function for alist: for type, return keybinding or nil"
+  "Accessor function for alist: for TYPE, return keybinding or nil."
   (nth 1 (cdr-safe (assq type html-helper-type-alist))))
 
 (defun html-helper-menu-for (type)
-  "Accessor function for alist: for type, return menu or nil"
+  "Accessor function for alist: for TYPE, return menu or nil."
   (nth 2 (cdr-safe (assq type html-helper-type-alist))))
 
 (defun html-helper-menu-string-for (type)
-  "Accessor function for alist: for type, return menustring or nil"
+  "Accessor function for alist: for TYPE, return menustring or nil."
   (nth 3 (cdr-safe (assq type html-helper-type-alist))))
 
 (defun html-helper-normalized-menu-for (type)
@@ -193,7 +193,7 @@ Add to this with `html-helper-add-type-to-alist'.")
         (eval (html-helper-menu-for type))))
 
 (defun html-helper-add-type-to-alist (type)
-  "Add a type specification to the alist.
+  "Add a TYPE specification to the alist.
 The spec goes (type . (keymap-symbol keyprefix menu-symbol menu-string)).
 See code for an example."
   (setq html-helper-type-alist (cons type html-helper-type-alist)))
@@ -237,7 +237,7 @@ See code for an example."
 There is no support for removing a type once it has been installed.")
 
 (defun html-helper-install-type (type)
-  "Install a new tag type: add it to the keymap, menu structures, etc.
+  "Install a new tag TYPE: add it to the keymap, menu structures, etc.
 For this to work, the type must first have been added to the list of types
 with `html-helper-add-type-to-alist'."
   (setq html-helper-installed-types (cons type html-helper-installed-types))
@@ -266,7 +266,7 @@ with `html-helper-add-type-to-alist'."
 
 ;; Extra commands that HTML helper supports that aren't insertions
 (defvar html-helper-mode-functions-map nil
-  "Keymap for extra html-helper functions")
+  "Keymap for extra html-helper functions.")
 (define-prefix-command 'html-helper-mode-functions-map)
 (define-key html-helper-mode-map "\C-c\C-z"
             'html-helper-mode-functions-map)
@@ -304,7 +304,7 @@ It's not entirely successful, but fortunately Emacs Lisp is forgiving."
     (concat "html-" (downcase s))))
 
 (defun html-helper-add-tag (l)
-  "Add a new tag to html-helper-mode.
+  "Add a new tag to `html-helper-mode'.
 Builds a tempo-template for the tag and puts it into the
 appropriate keymap if a key is requested. Format:
 `(html-helper-add-tag '(type keybinding completion-tag menu-name template doc)'"
@@ -518,10 +518,10 @@ appropriate keymap if a key is requested. Format:
     ["Insert List Item" html-helper-smart-insert-item t]
     ["Insert Inlined Image" tempo-template-html-image-with-alternate-text t]
     ["Turn on Expert Menu" html-helper-toggle-expert-menu t])
-  "Menu for novices, only installed if `html-helper-use-expert-menu is nil'")
+  "Menu for novices, only installed if `html-helper-use-expert-menu is nil'.")
 
 (defun html-helper-menu nil
-  "Return the proper menu. Looks at `html-helper-use-expert-menu'"
+  "Return the proper menu, based on `html-helper-use-expert-menu'."
   (if html-helper-use-expert-menu
       (html-helper-expert-menu)
     html-helper-novice-menu))
@@ -536,7 +536,7 @@ If `html-helper-use-expert-menu' is nil, then just use a novice menu."
     (easy-menu-add menu html-helper-mode-map)))
 
 (defun html-helper-toggle-expert-menu (&optional arg)
-  "Toggle full HTML menus. Optional arg acts like minor-mode args."
+  "Toggle full HTML menus. Optional ARG acts like minor-mode args."
   (interactive "P")
   (setq html-helper-use-expert-menu
         (if (null arg) (not html-helper-use-expert-menu)
@@ -626,7 +626,7 @@ This function can be called again, it redoes the entire menu."
           html-helper-any-list-start
           html-helper-any-list-end
           html-helper-any-list-item-start))
-(defvar html-helper-search-limit 2000 "limit on how far back we search")
+(defvar html-helper-search-limit 2000 "Limit on how far back we search.")
 
 (defun html-helper-context-symbol ()
   "Return the symbol the last match (against `html-helper-any-list') found."
@@ -650,6 +650,7 @@ Ignores list item ends, because those aren't reliable for indentation."
       (cons context (current-indentation)))))
 
 (defun html-helper-print-prev-context ()
+  "Show last tag before point relevant to indentation."
   (interactive)
   (message "%s" (html-helper-guess-prev-context)))
 
@@ -788,7 +789,7 @@ will should insert an appropriate timestamp in the buffer."
             "\n")))
 
 (defun html-helper-insert-timestamp-delimiter-at-point ()
-  "Simple function that inserts timestamp delimiters at point.
+  "Insert timestamp delimiters at point.
 Useful for adding timestamps to existing buffers."
   (interactive)
   (insert html-helper-timestamp-start)
@@ -809,7 +810,7 @@ Useful for adding timestamps to existing buffers."
 (defun html-helper-mode ()
   "Mode for editing HTML documents.
 
-The main function html-helper-mode provides a menu and keybindings
+The main function `html-helper-mode' provides a menu and keybindings
 for the HTML tags one inserts when writing HTML documents. Selecting
 the menu item or typing the key sequence for a command inserts the
 corresponding tag and places point in the right place. If a prefix
@@ -820,8 +821,7 @@ There is also code for indentation, timestamps, skeletons for new
 documents, and lots of other neat features.
 
 \\{html-helper-mode-map}
-Written by Nelson Minar.
-"
+Written by Nelson Minar."
   (interactive)
   (kill-all-local-variables)
 
