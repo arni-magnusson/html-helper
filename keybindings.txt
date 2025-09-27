@@ -1,0 +1,71 @@
+TAB         html-helper-indent-command
+RET         newline-and-indent
+M-RET       tempo-template-html-paragraph
+
+C-c RET     tempo-template-html-line-break
+C-c <       tempo-template-html-less-than
+C-c =       tempo-template-html-horizontal-line
+C-c >       tempo-template-html-greater-than
+
+C-c C-z v   browse-url-of-file
+
+C-c C-f b   tempo-template-html-submit-form
+C-c C-f c   tempo-template-html-checkbox
+C-c C-f f   tempo-template-html-form
+C-c C-f h   tempo-template-html-hidden-field
+C-c C-f i   tempo-template-html-image-field
+C-c C-f o   tempo-template-html-option
+C-c C-f p   tempo-template-html-text-area
+C-c C-f r   tempo-template-html-radiobutton
+C-c C-f s   tempo-template-html-selections
+C-c C-f t   tempo-template-html-text-field
+C-c C-f v   tempo-template-html-option-with-value
+C-c C-f z   tempo-template-html-reset-form
+
+C-c C-b B   tempo-template-html-body
+C-c C-b H   tempo-template-html-head
+C-c C-b b   tempo-template-html-base
+C-c C-b h   tempo-template-html-http-equivalent
+C-c C-b l   tempo-template-html-link
+C-c C-b m   tempo-template-html-meta-name
+C-c C-b t   tempo-template-html-title
+
+C-c TAB a   tempo-template-html-aligned-image
+C-c TAB e   tempo-template-html-aligned-image-with-alt.-text
+C-c TAB i   tempo-template-html-image
+C-c TAB t   tempo-template-html-image-with-alternate-text
+
+C-c C-p b   tempo-template-html-bold
+C-c C-p f   tempo-template-html-fixed
+C-c C-p i   tempo-template-html-italic
+C-c C-p s   tempo-template-html-strikethru
+C-c C-p u   tempo-template-html-underline
+
+C-c C-s a   tempo-template-html-address
+C-c C-s b   tempo-template-html-blockquote
+C-c C-s c   tempo-template-html-code
+C-c C-s d   tempo-template-html-definition
+C-c C-s e   tempo-template-html-emphasized
+C-c C-s k   tempo-template-html-keyboard-input
+C-c C-s p   tempo-template-html-preformatted
+C-c C-s r   tempo-template-html-citation
+C-c C-s s   tempo-template-html-strong
+C-c C-s v   tempo-template-html-variable
+C-c C-s x   tempo-template-html-sample
+
+C-c C-t 1   tempo-template-html-header-1
+C-c C-t 2   tempo-template-html-header-2
+C-c C-t 3   tempo-template-html-header-3
+C-c C-t 4   tempo-template-html-header-4
+C-c C-t 5   tempo-template-html-header-5
+C-c C-t 6   tempo-template-html-header-6
+
+C-c C-l d   tempo-template-html-definition-list
+C-c C-l i   html-helper-smart-insert-item
+C-c C-l l   tempo-template-html-list-item
+C-c C-l o   tempo-template-html-ordered-list
+C-c C-l t   tempo-template-html-definition-item
+C-c C-l u   tempo-template-html-unordered-list
+
+C-c C-a l   tempo-template-html-hyperlink
+C-c C-a n   tempo-template-html-link-target
