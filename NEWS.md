@@ -1,4 +1,4 @@
-# html-helper-mode 4.3.0 (2023-09-05)
+# html-helper-mode 4.3.0 (2023-09-27)
 
 * Improved the indentation engine so it indicates that the buffer has not been
   modified, if that is the case.
