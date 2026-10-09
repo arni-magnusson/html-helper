@@ -280,7 +280,8 @@ It's not entirely successful, but fortunately Emacs Lisp is forgiving."
   "Add a new tag to `html-helper-mode'.
 Builds a tempo-template for the tag and puts it into the
 appropriate keymap if a key is requested. Format:
-`(html-helper-add-tag '(type keybinding completion-tag menu-name template doc)'"
+`(html-helper-add-tag \
+\\='(type keybinding completion-tag menu-name template doc)'"
   (let* ((type (car l))
          (keymap (html-helper-keymap-for type))
          (menu (html-helper-menu-for type))
@@ -587,9 +588,9 @@ This function can be called again, it redoes the entire menu."
 
 (defun html-helper-guess-prev-context ()
   "Figure out the last list-type tag before point relevant to indentation.
-Returns 'item-start if the last list tag is a list item start
-        'start      if the last list tag is the start of a list
-        'end        if the last list tag is the end of a list.
+Returns \\='item-start if the last list tag is a list item start
+        \\='start      if the last list tag is the start of a list
+        \\='end        if the last list tag is the end of a list.
 Ignores list item ends, because those aren't reliable for indentation."
   (save-excursion
     (let* ((lim (max (point-min) (- (point) html-helper-search-limit)))
