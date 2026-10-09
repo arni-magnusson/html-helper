@@ -799,9 +799,7 @@ Written by Nelson Minar."
                           "c\\([^i]\\|i[^t]\\)\\|"
                           "e\\([^m]\\|m[^>]\\)\\|"
                           "i[^>]\\|"
-                          "v\\([^a]\\|a[^r]\\)\\)\\)\\)"))
-        (not-tend (concat "\\([^<]\\|<\\([^/]\\|/\\([^ht]\\|"
-                          "h[^1]\\|t\\([^i]\\|i[^t]\\)\\)\\)\\)")))
+                          "v\\([^a]\\|a[^r]\\)\\)\\)\\)")))
     (list
      ;; First fontify the text of a HREF anchor, it may be overridden later
      ;; Anchors in headings will be made bold, for instance
