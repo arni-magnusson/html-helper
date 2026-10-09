@@ -181,35 +181,35 @@ See code for an example."
   (setq html-helper-type-alist (cons type html-helper-type-alist)))
 
 ;; Types provided by html-helper-mode
-(mapcar 'html-helper-add-type-to-alist
-        '((entity  . (nil nil html-helper-entity-menu
-                          "Insert Character Entities"))
-          (textel  . (nil nil html-helper-textel-menu
-                          "Insert Text Elements"))
-          (head    . (html-helper-head-map
-                      "\C-c\C-b" html-helper-head-menu
-                      "Insert Structural Elements"))
-          (header  . (html-helper-header-map
-                      "\C-c\C-t" html-helper-header-menu
-                      "Insert Headers"))
-          (anchor  . (html-helper-anchor-map
-                      "\C-c\C-a" html-helper-anchor-menu
-                      "Insert Hyperlinks"))
-          (logical . (html-helper-logical-map
-                      "\C-c\C-s" html-helper-logical-menu
-                      "Insert Logical Styles"))
-          (phys    . (html-helper-phys-map
-                      "\C-c\C-p" html-helper-phys-menu
-                      "Insert Physical Styles"))
-          (list    . (html-helper-list-map
-                      "\C-c\C-l" html-helper-list-menu
-                      "Insert List Elements"))
-          (form    . (html-helper-form-map
-                      "\C-c\C-f" html-helper-form-menu
-                      "Insert Form Elements"))
-          (image   . (html-helper-image-map
-                      "\C-c\C-i" html-helper-image-menu
-                      "Insert Inlined Images"))))
+(mapc 'html-helper-add-type-to-alist
+      '((entity  . (nil nil html-helper-entity-menu
+                        "Insert Character Entities"))
+        (textel  . (nil nil html-helper-textel-menu
+                        "Insert Text Elements"))
+        (head    . (html-helper-head-map
+                    "\C-c\C-b" html-helper-head-menu
+                    "Insert Structural Elements"))
+        (header  . (html-helper-header-map
+                    "\C-c\C-t" html-helper-header-menu
+                    "Insert Headers"))
+        (anchor  . (html-helper-anchor-map
+                    "\C-c\C-a" html-helper-anchor-menu
+                    "Insert Hyperlinks"))
+        (logical . (html-helper-logical-map
+                    "\C-c\C-s" html-helper-logical-menu
+                    "Insert Logical Styles"))
+        (phys    . (html-helper-phys-map
+                    "\C-c\C-p" html-helper-phys-menu
+                    "Insert Physical Styles"))
+        (list    . (html-helper-list-map
+                    "\C-c\C-l" html-helper-list-menu
+                    "Insert List Elements"))
+        (form    . (html-helper-form-map
+                    "\C-c\C-f" html-helper-form-menu
+                    "Insert Form Elements"))
+        (image   . (html-helper-image-map
+                    "\C-c\C-i" html-helper-image-menu
+                    "Insert Inlined Images"))))
 
 ;; Once html-helper-mode is aware of a type, it can then install the type:
 ;; arrange for keybindings, menus, etc.
