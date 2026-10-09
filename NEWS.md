@@ -1,3 +1,22 @@
+# html-helper-mode 4.3.1 (2026-10-09)
+
+* Maintenance release, adapting to recent changes in Emacs.
+
+* Added file local variable `lexical-binding`.
+
+* Declared `tempo-template-html-*` functions to avoid byte compilation warnings.
+
+* Changed `mapcar` to `mapc` when return value is not used.
+
+* Escaped single quotes with `\\='` in docstrings.
+
+* Removed unused local variables `bol`, `menu-string`, and `not-tend`.
+
+* Removed calls to obsolete `easy-menu-add` and `easy-menu-remove`.
+
+
+
+
 # html-helper-mode 4.3.0 (2023-09-27)
 
 * Improved the indentation engine so it indicates that the buffer has not been
