@@ -225,8 +225,7 @@ with `html-helper-add-type-to-alist'."
   (setq html-helper-installed-types (cons type html-helper-installed-types))
   (let ((keymap (html-helper-keymap-for type))
         (key (html-helper-key-for type))
-        (menu (html-helper-menu-for type))
-        (menu-string (html-helper-menu-string-for type)))
+        (menu (html-helper-menu-for type)))
     (and key
          (progn
            (set keymap nil)
