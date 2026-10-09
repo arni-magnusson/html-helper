@@ -1,4 +1,4 @@
-;;; html-helper-mode.el --- Major mode for editing HTML files
+;;; html-helper-mode.el --- Major mode for HTML  -*- lexical-binding: t -*-
 
 ;; Copyright (C) 1994-1997 Nelson Minar
 ;; Copyright (C) 1998-2022 Nelson Minar and Ulrik Dickow
@@ -9,7 +9,7 @@
 ;; Keywords:   languages
 ;; URL:        https://github.com/arni-magnusson/html-helper
 
-(defconst html-helper-mode-version "4.3.0" "HTML Helper Mode version number.")
+(defconst html-helper-mode-version "4.3.1" "HTML Helper Mode version number.")
 
 ;;; Commentary:
 
@@ -50,7 +50,14 @@
 (require 'tempo)
 (require 'easymenu)
 
-;; 2  User variables
+;; 2  Reassure byte compiler
+
+;; These commands are defined at load time by `tempo-define-template'
+(declare-function tempo-template-html-skeleton "html-helper-mode")
+(declare-function tempo-template-html-definition-item "html-helper-mode")
+(declare-function tempo-template-html-list-item "html-helper-mode")
+
+;; 3  User variables
 
 (defvar html-helper-address-string ""
   "*The default author string of each file.")
@@ -106,7 +113,7 @@ Inserted by `html-helper-insert-new-buffer-strings' if
 If you want to not install some type of tag, override this variable.
 Order is significant: menus go in this order.")
 
-;; 3  Syntax table and abbrev table
+;; 4  Syntax table and abbrev table
 
 (defvar html-helper-mode-syntax-table nil
   "Syntax table for html-helper.")
@@ -125,7 +132,7 @@ Order is significant: menus go in this order.")
   "Abbrev table used while in `html-helper-mode'.")
 (define-abbrev-table 'html-helper-mode-abbrev-table ())
 
-;; 4  Keymap and menu
+;; 5  Keymap and menu
 
 (defvar html-helper-mode-map (make-sparse-keymap)
   "Keymap for html-helper.")
@@ -140,7 +147,7 @@ Order is significant: menus go in this order.")
 ;; then html-helper-add-tag (for each tag) then html-helper-rebuild-menu. See
 ;; the mode documentation for more detail.
 
-;; 5  Accessor functions for html-helper-type-alist
+;; 6  Accessor functions for html-helper-type-alist
 
 (defconst html-helper-type-alist nil
   "Alist: type of tag -> keymap, keybinding, menu, menu string.
@@ -252,7 +259,7 @@ with `html-helper-add-type-to-alist'."
          (fboundp browse-url-browser-function))
     (define-key html-helper-mode-functions-map "u" browse-url-browser-function))
 
-;; 6  Basic tags
+;; 7  Basic tags
 
 (defvar html-helper-tempo-tags nil
   "List of tags used in completion.")
@@ -297,7 +304,7 @@ appropriate keymap if a key is requested. Format:
                (cons (vector name command t) (eval menu))))
       )))
 
-;; 7  HTML tags
+;; 8  HTML tags
 
 ;; Order here is significant: within a tag type, menus and mode help go in the
 ;; reverse order of what you see here. Sorry about that, it's not easy to fix.
@@ -423,7 +430,7 @@ appropriate keymap if a key is requested. Format:
    (head "t" "<title>" "Title"
          ("<title>" (r "Document title: ") "</title>"))))
 
-;; 8  Smart insert item
+;; 9  Smart insert item
 
 ;; There are two different kinds of items in HTML - those in regular lists <li>
 ;; and those in dictionaries <dt>..<dd>. This command will insert the
@@ -539,7 +546,7 @@ This function can be called again, it redoes the entire menu."
 
 (html-helper-rebuild-menu)
 
-;; 10 Context guessing
+;; 11 Context guessing
 
 ;; Guess where we are in indented lists based on the last list token. It would
 ;; be much better to try to match </ul> to <ul>, and </ol> to <ol> etc, but that
@@ -596,7 +603,7 @@ Ignores list item ends, because those aren't reliable for indentation."
   (interactive)
   (message "%s" (html-helper-guess-prev-context)))
 
-;; 11 Indentation
+;; 12 Indentation
 
 (defvar html-helper-print-indent-info nil
   "If t, indent will print out information as a message.")
@@ -700,12 +707,12 @@ and `html-helper-never-indent'."
     (if (and (not was-modified-flag)(string-equal (buffer-hash) old-hash))
         (set-buffer-modified-p nil))))
 
-;; 12 Completion finder for tempo
+;; 13 Completion finder for tempo
 
 (defvar html-helper-completion-finder "\\(\\(<\\|&\\).*\\)\\="
   "Passed to `tempo-use-tag-list', used to find tags to complete.")
 
-;; 13 Insert new buffer strings
+;; 14 Insert new buffer strings
 
 (tempo-define-template "html-skeleton" html-helper-new-buffer-template
                        nil
@@ -715,7 +722,7 @@ and `html-helper-never-indent'."
   "Insert `html-helper-new-buffer-strings'."
   (tempo-template-html-skeleton))
 
-;; 14 Main function
+;; 15 Main function
 
 (defun html-helper-mode ()
   "Mode for editing HTML documents.
@@ -768,7 +775,7 @@ Written by Nelson Minar."
   (run-hooks 'html-mode-hook)
   (run-hooks 'html-helper-mode-hook))
 
-;; 15 Patterns for font-lock
+;; 16 Patterns for font-lock
 
 ;; We make an effort on handling nested tags intelligently
 (defvar html-helper-bold-face 'bold
