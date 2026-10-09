@@ -636,8 +636,8 @@ and `html-helper-never-indent'."
         (was-modified-flag (buffer-modified-p)))
     (if (not html-helper-never-indent)
         (progn
-          (let ((m (point-marker))
-                (bol (progn (beginning-of-line) (point))))
+          (let ((m (point-marker)))
+            (beginning-of-line)
 
             ;; Unindent the line
             (delete-region (point) (progn (back-to-indentation) (point)))
