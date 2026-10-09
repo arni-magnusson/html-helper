@@ -485,10 +485,8 @@ appropriate keymap if a key is requested. Format:
   "Rebuild and install the HTML menu (using `easy-menu-define').
 If `html-helper-use-expert-menu' is nil, then just use a novice menu."
   (let ((menu (html-helper-menu)))
-    (easy-menu-remove menu)
     (easy-menu-define html-helper-mode-menu-symbol
-      html-helper-mode-map "HTML menus" menu)
-    (easy-menu-add menu html-helper-mode-map)))
+      html-helper-mode-map "HTML menus" menu)))
 
 (defun html-helper-toggle-expert-menu (&optional arg)
   "Toggle full HTML menus. Optional ARG acts like minor-mode args."
@@ -768,8 +766,6 @@ Written by Nelson Minar."
 
   (if (and html-helper-build-new-buffer (zerop (buffer-size)))
       (html-helper-insert-new-buffer-strings))
-
-  (easy-menu-add (html-helper-menu) html-helper-mode-map)
 
   (run-hooks 'text-mode-hook)
   (run-hooks 'html-mode-hook)
