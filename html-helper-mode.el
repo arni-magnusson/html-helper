@@ -237,7 +237,7 @@ with `html-helper-add-type-to-alist'."
            (set menu nil)))))
 
 ;; Install the default types
-(mapcar 'html-helper-install-type html-helper-types-to-install)
+(mapc 'html-helper-install-type html-helper-types-to-install)
 
 ;; Extra commands that HTML helper supports that aren't insertions
 (defvar html-helper-mode-functions-map nil
@@ -309,7 +309,7 @@ appropriate keymap if a key is requested. Format:
 ;; Order here is significant: within a tag type, menus and mode help go in the
 ;; reverse order of what you see here. Sorry about that, it's not easy to fix.
 
-(mapcar
+(mapc
  'html-helper-add-tag
  '(
    ;; Entities
@@ -533,7 +533,7 @@ This function can be called again, it redoes the entire menu."
                   html-helper-mode-menu)))
 
   ;; Now cons up the main menu out of the submenus
-  (mapcar
+  (mapc
    (function (lambda (type)
                (setq html-helper-mode-menu
                      (cons (html-helper-normalized-menu-for type)
